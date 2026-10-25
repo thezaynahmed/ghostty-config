@@ -1,0 +1,49 @@
+# Alacritty Config - Dyslexia + ADHD + Late-Night Edition
+[window]
+padding = { x = 14, y = 12 }
+dynamic_padding = true
+opacity = 1.0
+blur = false
+option_as_alt = "OnlyLeft"
+
+[scrolling]
+history = 10000
+
+[font]
+size = 14.5
+normal = { family = "Monaspace Neon", style = "Regular" }
+bold = { family = "Monaspace Neon", style = "Bold" }
+italic = { family = "Monaspace Radon", style = "Regular" }
+bold_italic = { family = "Monaspace Radon", style = "Bold" }
+offset = { x = 1, y = 3 }
+
+[cursor]
+style = { shape = "Block", blinking = "Never" }
+
+[colors.primary]
+background = "#282828"
+foreground = "#d4be98"
+
+[colors.cursor]
+text = "#282828"
+cursor = "#d4be98"
+
+[colors.normal]
+black   = "#282828"
+red     = "#ea6962"
+green   = "#a9b665"
+yellow  = "#d8a657"
+blue    = "#7daea3"
+magenta = "#d3869b"
+cyan    = "#89b482"
+white   = "#d4be98"
+
+[colors.bright]
+black   = "#7c6f64"
+red     = "#ea6962"
+green   = "#a9b665"
+yellow  = "#d8a657"
+blue    = "#7daea3"
+magenta = "#d3869b"
+cyan    = "#89b482"
+white   = "#ddc7a1"

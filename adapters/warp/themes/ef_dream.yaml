@@ -1,0 +1,26 @@
+# Ef-Dream - Dyslexia + ADHD + Late-Night Edition for Warp
+name: "Ef-Dream"
+accent: "#f3c09a"
+cursor: "#f3c09a"
+background: "#232025"
+foreground: "#efd5c5"
+details: darker
+terminal_colors:
+  normal:
+    black: "#232025"
+    red: "#ff6f6f"
+    green: "#51b04f"
+    yellow: "#c0b24f"
+    blue: "#57b0ff"
+    magenta: "#ffaacf"
+    cyan: "#6fb3c0"
+    white: "#efd5c5"
+  bright:
+    black: "#635868"
+    red: "#ff7a5f"
+    green: "#7fce5f"
+    yellow: "#dfcf4f"
+    blue: "#80bfff"
+    magenta: "#ef9fe4"
+    cyan: "#8fcfdf"
+    white: "#ffffff"

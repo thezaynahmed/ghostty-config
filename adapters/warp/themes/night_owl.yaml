@@ -1,0 +1,26 @@
+# Night Owl - Dyslexia + ADHD + Late-Night Edition for Warp
+name: "Night Owl"
+accent: "#7e57c2"
+cursor: "#7e57c2"
+background: "#011627"
+foreground: "#d6deeb"
+details: darker
+terminal_colors:
+  normal:
+    black: "#011627"
+    red: "#ef5350"
+    green: "#22da6e"
+    yellow: "#addb67"
+    blue: "#82aaff"
+    magenta: "#c792ea"
+    cyan: "#21c7a8"
+    white: "#ffffff"
+  bright:
+    black: "#575656"
+    red: "#ef5350"
+    green: "#22da6e"
+    yellow: "#ffeb95"
+    blue: "#82aaff"
+    magenta: "#c792ea"
+    cyan: "#7fdbca"
+    white: "#ffffff"

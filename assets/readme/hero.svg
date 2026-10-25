@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 440" width="100%" role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">ghostty-config: Dyslexia, ADHD, and Late-Night Terminal Configuration</title>
+  <desc id="hero-desc">Gruvbox Material Dark Medium terminal specimen showing Monaspace Neon 14.5pt typography, linear-corrected Display P3 alpha blending, 0.65 inactive split-pane dimming, and 18 calibrated themes.</desc>
+
+  <!-- Outer Matte Obsidian Canvas -->
+  <rect width="1280" height="440" fill="#141617"/>
+
+  <!-- Subtle 1px Structural Grid Frame -->
+  <rect x="24" y="24" width="1232" height="392" fill="#181a1b" stroke="#2c2e30" stroke-width="1"/>
+
+  <!-- Vertical Column Divider between Editorial Spec (left) and Live Terminal (right) -->
+  <line x1="516" y1="24" x2="516" y2="416" stroke="#2c2e30" stroke-width="1"/>
+
+  <!-- ======================================================================= -->
+  <!-- LEFT COLUMN: PRODUCT SPEC & METRICS                                     -->
+  <!-- ======================================================================= -->
+  <g transform="translate(56, 62)">
+    <!-- Terminal Prompt Mark + Monospace Title -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="32" height="28" rx="4" fill="#282828" stroke="#3c3836" stroke-width="1"/>
+      <path d="M 8 9 L 14 14 L 8 19" fill="none" stroke="#ea6962" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="16" y="17" width="8" height="2.4" fill="#d8a657"/>
+      <text x="44" y="21" fill="#d4be98" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" font-weight="600" letter-spacing="-0.4">ghostty-config</text>
+    </g>
+
+    <!-- Primary Headline (Clean, High-Contrast Warm Sand, No Yellow Highlighter) -->
+    <text x="0" y="72" fill="#ebdbb2" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif" font-size="29" font-weight="600" letter-spacing="-0.7">Dyslexia, ADHD &amp; Late-Night</text>
+    <text x="0" y="108" fill="#a89984" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif" font-size="29" font-weight="500" letter-spacing="-0.7">Terminal Configuration</text>
+
+    <!-- Short, Direct Description -->
+    <text x="0" y="148" fill="#928374" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif" font-size="14.5" font-weight="400">Monaspace Neon 14.5pt with texture healing, linear P3</text>
+    <text x="0" y="170" fill="#928374" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif" font-size="14.5" font-weight="400">gamma blending, and 0.65 split dimming for macOS &amp; Linux.</text>
+
+    <!-- 2x2 Architectural Spec Grid (1px Hairlines, Tabular Data) -->
+    <g transform="translate(0, 196)">
+      <rect x="0" y="0" width="428" height="96" fill="#1d2021" stroke="#32302f" stroke-width="1"/>
+      <line x1="214" y1="0" x2="214" y2="96" stroke="#32302f" stroke-width="1"/>
+      <line x1="0" y1="48" x2="428" y2="48" stroke="#32302f" stroke-width="1"/>
+
+      <!-- Cell 1 -->
+      <text x="14" y="20" fill="#7c6f64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5">CELL GEOMETRY</text>
+      <text x="14" y="38" fill="#d4be98" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="600">+20% height · +4% width</text>
+
+      <!-- Cell 2 -->
+      <text x="228" y="20" fill="#7c6f64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5">COLOR BLENDING</text>
+      <text x="228" y="38" fill="#a9b665" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="600">linear-corrected · 3.5:1</text>
+
+      <!-- Cell 3 -->
+      <text x="14" y="68" fill="#7c6f64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5">ADHD SPLIT FOCUS</text>
+      <text x="14" y="86" fill="#7daea3" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="600">0.65 dim · steady block</text>
+
+      <!-- Cell 4 -->
+      <text x="228" y="68" fill="#7c6f64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5">PORTABILITY</text>
+      <text x="228" y="86" fill="#d8a657" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="600">18 themes · 16+ terminals</text>
+    </g>
+
+    <!-- Bottom Swatch Strip (18-Theme Palette Specimen) -->
+    <g transform="translate(0, 314)">
+      <rect x="0" y="0" width="14" height="14" fill="#ea6962"/>
+      <rect x="18" y="0" width="14" height="14" fill="#a9b665"/>
+      <rect x="36" y="0" width="14" height="14" fill="#d8a657"/>
+      <rect x="54" y="0" width="14" height="14" fill="#7daea3"/>
+      <rect x="72" y="0" width="14" height="14" fill="#d3869b"/>
+      <rect x="90" y="0" width="14" height="14" fill="#89b482"/>
+      <rect x="108" y="0" width="14" height="14" fill="#fcef0c"/>
+      <rect x="126" y="0" width="14" height="14" fill="#82aaff"/>
+      <rect x="144" y="0" width="14" height="14" fill="#c792ea"/>
+      <rect x="162" y="0" width="14" height="14" fill="#eb6f92"/>
+      <rect x="180" y="0" width="14" height="14" fill="#50fa7b"/>
+      <rect x="198" y="0" width="14" height="14" fill="#dcd7ba"/>
+      <text x="224" y="11" fill="#7c6f64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">MIT · macOS &amp; Linux</text>
+    </g>
+  </g>
+
+  <!-- ======================================================================= -->
+  <!-- RIGHT COLUMN: LIVE GHOSTTY SPLIT-PANE SPECIMEN                          -->
+  <!-- ======================================================================= -->
+  <g transform="translate(544, 52)">
+    <!-- Terminal Window Frame -->
+    <rect x="0" y="0" width="684" height="336" rx="6" fill="#282828" stroke="#3c3836" stroke-width="1"/>
+
+    <!-- Native Dark Titlebar -->
+    <path d="M 0 6 Q 0 0 6 0 L 678 0 Q 684 0 684 6 L 684 34 L 0 34 Z" fill="#1d2021"/>
+    <line x1="0" y1="34" x2="684" y2="34" stroke="#32302f" stroke-width="1"/>
+
+    <!-- Muted Window Dots -->
+    <circle cx="18" cy="17" r="4.5" fill="#504945"/>
+    <circle cx="32" cy="17" r="4.5" fill="#504945"/>
+    <circle cx="46" cy="17" r="4.5" fill="#504945"/>
+
+    <text x="68" y="21" fill="#a89984" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">~/.config/ghostty/config  ·  Gruvbox Material Dark Medium  ·  14.5pt</text>
+    <text x="518" y="21" fill="#7c6f64" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">inactive split: 0.65</text>
+
+    <!-- ===================================================================== -->
+    <!-- ACTIVE LEFT PANE (100% Opacity, x: 0..492)                            -->
+    <!-- ===================================================================== -->
+    <g transform="translate(20, 60)" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5">
+      <!-- Prompt 1 -->
+      <text x="0" y="0" fill="#a9b665" font-weight="700">zain@mac</text>
+      <text x="72" y="0" fill="#7daea3">~/.config/ghostty</text>
+      <text x="208" y="0" fill="#d8a657">❯</text>
+      <text x="222" y="0" fill="#d4be98">ghostty +validate-config</text>
+      <text x="0" y="21" fill="#89b482">✓ Config valid</text>
+      <text x="108" y="21" fill="#928374">(Monaspace Neon · +calt +ss01 +zero +cv10)</text>
+
+      <!-- Prompt 2 -->
+      <text x="0" y="50" fill="#a9b665" font-weight="700">zain@mac</text>
+      <text x="72" y="50" fill="#7daea3">~/.config/ghostty</text>
+      <text x="208" y="50" fill="#d8a657">❯</text>
+      <text x="222" y="50" fill="#d4be98">git diff config</text>
+
+      <!-- Diff Rows (Laser-aligned "=" column at x=208) -->
+      <rect x="-6" y="61" width="460" height="22" rx="2" fill="#3c1f1e" fill-opacity="0.55"/>
+      <text x="0" y="76" fill="#ea6962">- alpha-blending</text>
+      <text x="208" y="76" fill="#ea6962">= native</text>
+
+      <rect x="-6" y="85" width="460" height="22" rx="2" fill="#24321b" fill-opacity="0.65"/>
+      <text x="0" y="100" fill="#a9b665">+ alpha-blending</text>
+      <text x="208" y="100" fill="#a9b665">= linear-corrected</text>
+
+      <rect x="-6" y="109" width="460" height="22" rx="2" fill="#24321b" fill-opacity="0.65"/>
+      <text x="0" y="124" fill="#a9b665">+ adjust-cell-height</text>
+      <text x="208" y="124" fill="#a9b665">= 20%</text>
+
+      <rect x="-6" y="133" width="460" height="22" rx="2" fill="#24321b" fill-opacity="0.65"/>
+      <text x="0" y="148" fill="#a9b665">+ unfocused-split-opacity</text>
+      <text x="208" y="148" fill="#a9b665">= 0.65</text>
+
+      <!-- Glyph Disambiguation Bar -->
+      <rect x="-6" y="168" width="460" height="32" rx="3" fill="#1d2021" stroke="#32302f" stroke-width="1"/>
+      <text x="8" y="188" fill="#928374" font-size="11.5">GLYPHS:</text>
+      <text x="72" y="188" fill="#d8a657" font-weight="600">0O</text>
+      <text x="102" y="188" fill="#89b482" font-weight="600">1lI</text>
+      <text x="138" y="188" fill="#d3869b" font-weight="600">=== !== -&gt; =&gt;</text>
+      <text x="252" y="188" fill="#7daea3" font-weight="600">rn vs m</text>
+      <text x="324" y="188" fill="#a9b665" font-size="11.5">[solid · no blur]</text>
+
+      <!-- Active Prompt + Steady Block Cursor -->
+      <text x="0" y="226" fill="#a9b665" font-weight="700">zain@mac</text>
+      <text x="72" y="226" fill="#7daea3">~/.config/ghostty</text>
+      <text x="208" y="226" fill="#d8a657">❯</text>
+      <text x="222" y="226" fill="#d4be98">ghostty-theme batman</text>
+      <rect x="380" y="212" width="9" height="17" fill="#d4be98"/>
+
+      <text x="0" y="250" fill="#89b482">Updated Ghostty theme -&gt; Batman</text>
+    </g>
+
+    <!-- Vertical Split Divider -->
+    <line x1="496" y1="34" x2="496" y2="336" stroke="#32302f" stroke-width="1"/>
+
+    <!-- ===================================================================== -->
+    <!-- INACTIVE RIGHT PANE (Dimmed to 0.65 Opacity, x: 496..684)             -->
+    <!-- ===================================================================== -->
+    <g transform="translate(496, 34)">
+      <rect x="0" y="0" width="188" height="302" fill="#1d2021" fill-opacity="0.72"/>
+      <g transform="translate(16, 26)" opacity="0.50" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5" fill="#a89984">
+        <text x="0" y="0" fill="#7daea3">$ kubectl get pods</text>
+        <text x="0" y="22">api-7f9c</text>
+        <text x="72" y="22">1/1</text>
+        <text x="104" y="22">Run</text>
+
+        <text x="0" y="42">auth-4b2</text>
+        <text x="72" y="42">1/1</text>
+        <text x="104" y="42">Run</text>
+
+        <text x="0" y="62">worker-0</text>
+        <text x="72" y="62">1/1</text>
+        <text x="104" y="62">Run</text>
+
+        <text x="0" y="96" fill="#7daea3">$ cargo test -q</text>
+        <text x="0" y="118" fill="#a9b665">ok. 42 passed</text>
+
+        <text x="0" y="154" fill="#928374"># Unfocused split</text>
+        <text x="0" y="174" fill="#928374"># dims to 0.65 so</text>
+        <text x="0" y="194" fill="#928374"># your eye locks</text>
+        <text x="0" y="214" fill="#928374"># on active work.</text>
+      </g>
+    </g>
+  </g>
+</svg>

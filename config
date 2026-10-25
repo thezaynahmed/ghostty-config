@@ -1,0 +1,74 @@
+# ===================================================================
+# 1. THEME (Pick your #1 match)
+# ===================================================================
+theme = Gruvbox Material Dark Medium
+# Alternatives to test:
+# theme = Kanagawa Wave
+# theme = Catppuccin Mocha
+# theme = Modus Vivendi Tinted
+
+# ===================================================================
+# 2. FONT & ANTI-CROWDING (Dyslexia Game-Changers)
+# ===================================================================
+font-family = "Monaspace Neon"
+font-family-italic = "Monaspace Radon"
+font-family-bold-italic = "Monaspace Radon"
+font-size = 14.5
+
+# Enable Monaspace Texture Healing (+calt), ligature sets (+ss01..+ss03),
+# slashed zero (+zero), and serifed lowercase 'l' (+cv10)
+font-feature = +calt, +ss01, +ss02, +ss03, +zero, +cv10
+
+# Stops vertical "wall of text" blur in kubectl / terraform / AI logs
+adjust-cell-height = 20%
+# Adds subtle horizontal breathing room between characters
+adjust-cell-width = 4%
+
+# ===================================================================
+# 3. ANTI-HALOING & COLOR CLARITY (Late-Night Eye Savers)
+# ===================================================================
+# CRITICAL ON MACOS: Fixes fuzzy/glowing edges on colored text (like red/green diffs)
+alpha-blending = linear-corrected
+
+# Gives thin monospace strokes slightly more body so letters don't shimmer
+font-thicken = true
+font-thicken-strength = 100
+
+# Guarantees dark-blue or gray CLI flags (docker/k8s) are never dim/invisible
+minimum-contrast = 3.5
+
+# Strictly no blur, solid background
+background-opacity = 1
+background-blur = false
+
+# ===================================================================
+# 4. ADHD FOCUS & DOPAMINE GUARDS
+# ===================================================================
+# Dims inactive split panes so your eyes lock ONLY onto your active terminal!
+unfocused-split-opacity = 0.65
+
+# High-visibility cursor that never gets lost, with blinking OFF to stop distraction
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+# Subtle cursor trail / shader animation disabled
+custom-shader-animation = false
+
+# Clean breathing room around the edges of the terminal
+window-padding-x = 14
+window-padding-y = 12
+window-padding-balance = true
+
+# ===================================================================
+# 5. MACOS BEHAVIOR
+# ===================================================================
+window-inherit-font-size = true
+window-inherit-working-directory = true
+macos-titlebar-style = transparent
+macos-window-shadow = true
+macos-option-as-alt = left
+mouse-hide-while-typing = true
+scrollback-limit = 10000
+confirm-close-surface = false
+auto-update-channel = stable

@@ -1,0 +1,24 @@
+# Ef-Bio (Protesilaos Stavrou ef-themes)
+# Deep organic charcoal background with herbal green and soft mint contrast
+background = #111111
+foreground = #cfdfd5
+cursor-color = #3fb83f
+cursor-text = #111111
+selection-background = #2a3b2f
+selection-foreground = #cfdfd5
+palette = 0=#111111
+palette = 1=#ef6560
+palette = 2=#3fb83f
+palette = 3=#d4aa02
+palette = 4=#37aff6
+palette = 5=#d38faf
+palette = 6=#6fc5ef
+palette = 7=#cfdfd5
+palette = 8=#526058
+palette = 9=#f57f5f
+palette = 10=#75c86b
+palette = 11=#e0bf4f
+palette = 12=#6bc2ff
+palette = 13=#e49fd0
+palette = 14=#7fd8d8
+palette = 15=#ffffff

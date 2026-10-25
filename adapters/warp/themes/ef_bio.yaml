@@ -1,0 +1,26 @@
+# Ef-Bio - Dyslexia + ADHD + Late-Night Edition for Warp
+name: "Ef-Bio"
+accent: "#3fb83f"
+cursor: "#3fb83f"
+background: "#111111"
+foreground: "#cfdfd5"
+details: darker
+terminal_colors:
+  normal:
+    black: "#111111"
+    red: "#ef6560"
+    green: "#3fb83f"
+    yellow: "#d4aa02"
+    blue: "#37aff6"
+    magenta: "#d38faf"
+    cyan: "#6fc5ef"
+    white: "#cfdfd5"
+  bright:
+    black: "#526058"
+    red: "#f57f5f"
+    green: "#75c86b"
+    yellow: "#e0bf4f"
+    blue: "#6bc2ff"
+    magenta: "#e49fd0"
+    cyan: "#7fd8d8"
+    white: "#ffffff"

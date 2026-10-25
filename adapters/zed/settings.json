@@ -1,0 +1,41 @@
+{
+  "terminal": {
+    "font_family": "Monaspace Neon",
+    "font_size": 14.5,
+    "font_features": {
+      "calt": true,
+      "ss01": true,
+      "ss02": true,
+      "ss03": true,
+      "zero": true,
+      "cv10": true
+    },
+    "line_height": {
+      "custom": 1.2
+    },
+    "blinking": "off",
+    "cursor_shape": "block",
+    "option_as_meta": true,
+    "max_scroll_history_lines": 10000
+  },
+  "experimental.theme_overrides": {
+    "terminal.background": "#282828",
+    "terminal.foreground": "#d4be98",
+    "terminal.ansi.black": "#282828",
+    "terminal.ansi.red": "#ea6962",
+    "terminal.ansi.green": "#a9b665",
+    "terminal.ansi.yellow": "#d8a657",
+    "terminal.ansi.blue": "#7daea3",
+    "terminal.ansi.magenta": "#d3869b",
+    "terminal.ansi.cyan": "#89b482",
+    "terminal.ansi.white": "#d4be98",
+    "terminal.ansi.bright_black": "#7c6f64",
+    "terminal.ansi.bright_red": "#ea6962",
+    "terminal.ansi.bright_green": "#a9b665",
+    "terminal.ansi.bright_yellow": "#d8a657",
+    "terminal.ansi.bright_blue": "#7daea3",
+    "terminal.ansi.bright_magenta": "#d3869b",
+    "terminal.ansi.bright_cyan": "#89b482",
+    "terminal.ansi.bright_white": "#ddc7a1"
+  }
+}

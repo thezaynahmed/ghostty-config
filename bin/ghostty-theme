@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# ghostty-theme - CLI theme switcher and adapter installer
+# Supports all 18 curated Dyslexia + ADHD + Late-Night themes
+# ==============================================================================
+set -euo pipefail
+
+REPO_DIR="${GHOSTTY_CONFIG_DIR:-$HOME/.config/ghostty}"
+CONFIG_FILE="${GHOSTTY_CONFIG_PATH:-$REPO_DIR/config}"
+
+resolve_theme() {
+  local input
+  input="$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[-_]/ /g')"
+  case "$input" in
+    batman|gotham) echo "Batman" ;;
+    night\ owl|nightowl) echo "Night Owl" ;;
+    modus|modus\ vivendi|modus\ vivendi\ tinted) echo "Modus Vivendi Tinted" ;;
+    ef\ dream|efdream) echo "Ef-Dream" ;;
+    ef\ bio|efbio) echo "Ef-Bio" ;;
+    gruvbox|gruvbox\ material|gruvbox\ material\ dark\ medium) echo "Gruvbox Material Dark Medium" ;;
+    gruvbox\ dark|gruvbox\ material\ dark) echo "Gruvbox Material Dark" ;;
+    kanagawa|kanagawa\ wave) echo "Kanagawa Wave" ;;
+    kanagawa\ dragon|dragon) echo "Kanagawa Dragon" ;;
+    catppuccin|catppuccin\ mocha|mocha) echo "Catppuccin Mocha" ;;
+    tokyo|tokyo\ night|tokyo\ night\ storm|tokyonight\ storm) echo "TokyoNight Storm" ;;
+    ubuntu) echo "Ubuntu" ;;
+    rose\ pine|rosé\ pine|rosepine) echo "Rose Pine" ;;
+    rose\ pine\ moon|rosé\ pine\ moon|moon) echo "Rose Pine Moon" ;;
+    everforest|everforest\ dark|everforest\ dark\ hard) echo "Everforest Dark Hard" ;;
+    dracula) echo "Dracula" ;;
+    dracula+|dracula\ plus) echo "Dracula+" ;;
+    ayu|ayu\ mirage|mirage) echo "Ayu Mirage" ;;
+    *) echo "$1" ;;
+  esac
+}
+
+list_themes() {
+  cat << 'EOF'
+Curated Themes (18):
+  1. Gruvbox Material Dark Medium  [Bundled Alias]   #282828 bg | #d4be98 fg  (Default)
+  2. Gruvbox Material Dark         [Ghostty Builtin] #282828 bg | #d4be98 fg
+  3. Batman                        [Ghostty Builtin] #1b1d1e bg | #fcef0c cursor
+  4. Night Owl                     [Ghostty Builtin] #011627 bg | #d6deeb fg
+  5. Modus Vivendi Tinted          [Ghostty Builtin] #0d0e1c bg | #ffffff fg  (WCAG AAA)
+  6. Ef-Dream                      [Bundled Custom]  #232025 bg | #efd5c5 fg
+  7. Ef-Bio                        [Bundled Custom]  #111111 bg | #cfdfd5 fg
+  8. Kanagawa Wave                 [Ghostty Builtin] #1f1f28 bg | #dcd7ba fg
+  9. Kanagawa Dragon               [Ghostty Builtin] #181616 bg | #c5c9c5 fg
+ 10. Catppuccin Mocha              [Ghostty Builtin] #1e1e2e bg | #cdd6f4 fg
+ 11. TokyoNight Storm              [Ghostty Builtin] #24283b bg | #c0caf5 fg
+ 12. Rose Pine (Rosé Pine)         [Ghostty Builtin] #191724 bg | #e0def4 fg
+ 13. Rose Pine Moon                [Ghostty Builtin] #232136 bg | #e0def4 fg
+ 14. Everforest Dark Hard          [Ghostty Builtin] #1e2326 bg | #d3c6aa fg
+ 15. Dracula                       [Ghostty Builtin] #282a36 bg | #f8f8f2 fg
+ 16. Dracula+                      [Ghostty Builtin] #212121 bg | #f8f8f2 fg
+ 17. Ayu Mirage                    [Ghostty Builtin] #1f2430 bg | #cccac2 fg
+ 18. Ubuntu                        [Ghostty Builtin] #300a24 bg | #eeeeec fg
+
+Usage:
+  ghostty-theme --list               List all 18 calibrated themes
+  ghostty-theme <theme-name>         Switch Ghostty theme immediately
+  ghostty-theme sync --all           Apply config to all editors and terminals
+  ghostty-theme sync --cursor        Apply config to Cursor IDE
+EOF
+}
+
+if [[ $# -eq 0 || "$1" == "--list" || "$1" == "-l" || "$1" == "--help" || "$1" == "-h" ]]; then
+  list_themes
+  exit 0
+fi
+
+if [[ "$1" == "sync" ]]; then
+  shift
+  exec "$REPO_DIR/install.sh" "$@"
+fi
+
+TARGET_THEME="$(resolve_theme "$*")"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "Error: Ghostty config not found at $CONFIG_FILE" >&2
+  exit 1
+fi
+
+python3 - "$CONFIG_FILE" "$TARGET_THEME" << 'PY'
+import sys, re
+
+cfg_path, theme = sys.argv[1], sys.argv[2]
+with open(cfg_path, "r", encoding="utf-8") as f:
+    content = f.read()
+
+new_content, count = re.subn(
+    r"^theme\s*=\s*.*$",
+    f"theme = {theme}",
+    content,
+    count=1,
+    flags=re.MULTILINE,
+)
+if count == 0:
+    new_content = f"theme = {theme}\n" + content
+
+with open(cfg_path, "w", encoding="utf-8") as f:
+    f.write(new_content)
+print(f"Updated Ghostty theme -> {theme}")
+PY
