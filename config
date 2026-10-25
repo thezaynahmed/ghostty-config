@@ -55,22 +55,26 @@ shell-integration-features = no-cursor
 # Subtle cursor trail / shader animation disabled
 custom-shader-animation = false
 
-# Seamless edge-to-edge layout: removes outer gaps around btop, nvim, and prompt
-window-padding-x = 0
-window-padding-y = 0
-window-padding-balance = false
+# Seamless, balanced padding: prevents text hugging window edges while keeping TUIs clean
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
 window-padding-color = extend
 
 # ===================================================================
-# 5. MACOS BEHAVIOR
+# 5. MACOS & TILING BEHAVIOR
 # ===================================================================
 window-inherit-font-size = true
 window-inherit-working-directory = true
-macos-titlebar-style = tabs
-macos-titlebar-proxy-icon = hidden
+
+# Completely hides the massive titlebar while preserving native rounded corners & shadows
+macos-titlebar-style = hidden
 macos-window-shadow = true
 macos-option-as-alt = left
 mouse-hide-while-typing = true
 scrollback-limit = 10000
 confirm-close-surface = false
 auto-update-channel = stable
+
+# Quick toggle: Cmd+Shift+T toggles titlebar on/off at runtime
+keybind = super+shift+t=toggle_window_decorations
