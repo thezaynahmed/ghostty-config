@@ -1,20 +1,31 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Apply Dyslexia + ADHD Typography & Steady Block Cursor to macOS Terminal.app
+# Apply Gruvbox Material Dark + MesloLGS NF to native macOS Terminal.app
 # ==============================================================================
 set -euo pipefail
 
-PROFILE_NAME="$(defaults read com.apple.Terminal "Default Window Settings" 2>/dev/null || echo "Pro")"
-echo "Configuring macOS Terminal.app profile: $PROFILE_NAME"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+THEME_FILE="${SCRIPT_DIR}/Gruvbox Material Dark.terminal"
+PROFILE_NAME="Gruvbox Material Dark"
 
-# Disable cursor blink and set steady block cursor (CursorType = 0 in Terminal.app)
-/usr/libexec/PlistBuddy -c "Set ':Window Settings:${PROFILE_NAME}:CursorBlink' false" ~/Library/Preferences/com.apple.Terminal.plist 2>/dev/null || \
-  /usr/libexec/PlistBuddy -c "Add ':Window Settings:${PROFILE_NAME}:CursorBlink' bool false" ~/Library/Preferences/com.apple.Terminal.plist
+echo "==> Importing '${PROFILE_NAME}' into macOS Terminal.app..."
+open "${THEME_FILE}"
+sleep 1
 
-/usr/libexec/PlistBuddy -c "Set ':Window Settings:${PROFILE_NAME}:CursorType' 0" ~/Library/Preferences/com.apple.Terminal.plist 2>/dev/null || \
-  /usr/libexec/PlistBuddy -c "Add ':Window Settings:${PROFILE_NAME}:CursorType' integer 0" ~/Library/Preferences/com.apple.Terminal.plist
+echo "==> Setting '${PROFILE_NAME}' as default and startup profile..."
+osascript <<EOF
+tell application "Terminal"
+    set default settings to settings set "${PROFILE_NAME}"
+    set startup settings to settings set "${PROFILE_NAME}"
+    repeat with w in windows
+        repeat with t in tabs of w
+            set current settings of t to settings set "${PROFILE_NAME}"
+        end repeat
+    end repeat
+end tell
+EOF
 
-/usr/libexec/PlistBuddy -c "Set ':Window Settings:${PROFILE_NAME}:FontAntialias' true" ~/Library/Preferences/com.apple.Terminal.plist 2>/dev/null || true
-/usr/libexec/PlistBuddy -c "Set ':Window Settings:${PROFILE_NAME}:UseBoldFonts' true" ~/Library/Preferences/com.apple.Terminal.plist 2>/dev/null || true
+defaults write com.apple.Terminal "Default Window Settings" -string "${PROFILE_NAME}"
+defaults write com.apple.Terminal "Startup Window Settings" -string "${PROFILE_NAME}"
 
-echo "macOS Terminal.app updated (Steady Block Cursor + Antialiasing enabled)."
+echo "==> macOS Terminal.app successfully configured with Gruvbox Material Dark + MesloLGS NF."
