@@ -182,9 +182,9 @@
 	<key>FontAntialias</key>
 	<true/>
 	<key>FontHeightSpacing</key>
-	<real>1.2</real>
+	<real>1.0</real>
 	<key>FontWidthSpacing</key>
-	<real>1.04</real>
+	<real>1.0</real>
 	<key>ProfileCurrentVersion</key>
 	<real>2.04</real>
 	<key>SelectionColor</key>
