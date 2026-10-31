@@ -131,6 +131,7 @@ if [[ "$OS" == "Darwin" ]]; then
     brew list --cask ghostty >/dev/null 2>&1 || brew install --cask ghostty
     brew list --cask font-monaspace >/dev/null 2>&1 || brew install --cask font-monaspace
     brew list --cask font-symbols-only-nerd-font >/dev/null 2>&1 || brew install --cask font-symbols-only-nerd-font
+    brew list eza >/dev/null 2>&1 || brew install eza
   fi
 elif [[ "$OS" == "Linux" ]]; then
   if [[ -f /etc/os-release ]]; then

@@ -21,3 +21,10 @@ export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=
 if [[ -x "$HOME/.config/ghostty/bin/ghostty-theme" ]]; then
   alias gtheme="$HOME/.config/ghostty/bin/ghostty-theme"
 fi
+
+# 4. Icon-rich file listing via eza (modern Nerd Font icons)
+if command -v eza >/dev/null 2>&1; then
+  alias ls="eza --icons=auto --group-directories-first"
+  alias ll="eza -la --icons=auto --git --group-directories-first"
+  alias lt="eza --tree --level=2 --icons=auto"
+fi
