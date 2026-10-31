@@ -130,6 +130,7 @@ if [[ "$OS" == "Darwin" ]]; then
   if command -v brew >/dev/null 2>&1; then
     brew list --cask ghostty >/dev/null 2>&1 || brew install --cask ghostty
     brew list --cask font-monaspace >/dev/null 2>&1 || brew install --cask font-monaspace
+    brew list --cask font-symbols-only-nerd-font >/dev/null 2>&1 || brew install --cask font-symbols-only-nerd-font
   fi
 elif [[ "$OS" == "Linux" ]]; then
   if [[ -f /etc/os-release ]]; then
@@ -214,6 +215,9 @@ fi
 
 if [[ "$INSTALL_ALL" -eq 1 || "$INSTALL_ANTIGRAVITY" -eq 1 ]]; then
   merge_json_settings "$APP_SUPPORT/Antigravity/User/settings.json" "$TARGET_DIR/adapters/antigravity/settings.json"
+  if [[ -d "$APP_SUPPORT/Antigravity IDE/User" ]]; then
+    merge_json_settings "$APP_SUPPORT/Antigravity IDE/User/settings.json" "$TARGET_DIR/adapters/antigravity/settings.json"
+  fi
   echo "✓ Configured Antigravity IDE terminal settings"
 fi
 
