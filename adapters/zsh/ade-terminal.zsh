@@ -28,3 +28,12 @@ if command -v eza >/dev/null 2>&1; then
   alias ll="eza -la --icons=auto --git --group-directories-first"
   alias lt="eza --tree --level=2 --icons=auto"
 fi
+
+# 5. Interactive Tab-Completion with Icons (fzf-tab + eza)
+if [[ -d "$HOME/.oh-my-zsh/custom/plugins/fzf-tab" ]]; then
+  zstyle ':completion:*:descriptions' format '[%d]'
+  zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+  if command -v eza >/dev/null 2>&1; then
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons=always --group-directories-first $realpath'
+  fi
+fi
