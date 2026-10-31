@@ -24,6 +24,8 @@ INSTALL_KITTY=0
 INSTALL_TMUX=0
 INSTALL_ZSH=0
 INSTALL_FONTCONFIG=0
+INSTALL_SHELL_ICONS=0
+STARSHIP_PROFILE=""
 INITIAL_THEME=""
 
 show_help() {
@@ -48,6 +50,8 @@ Options:
   --macos-terminal    Configure macOS Terminal.app profile (macOS)
   --linux-fontconfig  Install Linux Fontconfig OpenType & hinting rules (Linux)
   --zsh               Add steady-cursor & contrast hook to ~/.zshrc
+  --shell-icons       Set up eza/fzf dependencies and the Zsh icon adapter
+  --starship <profile> Opt into minimal, context, or portable Starship prompt
   -h, --help          Show this help message
 EOF
 }
@@ -69,12 +73,43 @@ while [[ $# -gt 0 ]]; do
     --kitty) INSTALL_KITTY=1; shift ;;
     --tmux) INSTALL_TMUX=1; shift ;;
     --zsh) INSTALL_ZSH=1; shift ;;
+    --shell-icons) INSTALL_SHELL_ICONS=1; INSTALL_ZSH=1; shift ;;
+    --starship)
+      case "${2:-}" in minimal|context|portable) STARSHIP_PROFILE="$2" ;; *) echo 'Expected --starship minimal|context|portable' >&2; exit 2 ;; esac
+      INSTALL_SHELL_ICONS=1; INSTALL_ZSH=1; shift 2 ;;
     --linux-fontconfig) INSTALL_FONTCONFIG=1; shift ;;
     --theme) INITIAL_THEME="${2:-}"; shift 2 ;;
     -h|--help) show_help; exit 0 ;;
     *) shift ;;
   esac
 done
+
+install_symbols_linux() {
+  if fc-list --format '%{family}\n' 2>/dev/null | grep -i 'Symbols Nerd Font Mono' >/dev/null; then
+    return 0
+  fi
+  local archive font_dir
+  archive="$(mktemp /tmp/ghostty-symbols-XXXXXX.zip)"
+  font_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/nerd-fonts-symbols"
+  curl -fsSL 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/NerdFontsSymbolsOnly.zip' -o "$archive"
+  python3 - "$archive" "$font_dir" <<'PY'
+import hashlib, pathlib, sys, zipfile
+archive, destination = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+expected = 'fdca3682534f6f65e1ccb2345b0362ccf67d9b8eca7c8025330946e93e2473bc'
+try:
+    if hashlib.sha256(archive.read_bytes()).hexdigest() != expected:
+        raise SystemExit('Symbols font checksum mismatch; refusing to install.')
+    destination.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(archive) as fonts:
+        for name in fonts.namelist():
+            leaf = pathlib.PurePosixPath(name).name
+            if leaf.endswith('.ttf') or leaf.upper().startswith(('LICENSE', 'README')):
+                (destination / leaf).write_bytes(fonts.read(name))
+finally:
+    archive.unlink(missing_ok=True)
+PY
+  fc-cache -f "$font_dir"
+}
 
 install_monaspace_linux() {
   local font_dir="$HOME/.local/share/fonts/monaspace"
@@ -132,6 +167,12 @@ if [[ "$OS" == "Darwin" ]]; then
     brew list --cask font-monaspace >/dev/null 2>&1 || brew install --cask font-monaspace
     brew list --cask font-symbols-only-nerd-font >/dev/null 2>&1 || brew install --cask font-symbols-only-nerd-font
     brew list eza >/dev/null 2>&1 || brew install eza
+    if [[ "$INSTALL_SHELL_ICONS" -eq 1 || "$INSTALL_ALL" -eq 1 ]]; then
+      brew list fzf >/dev/null 2>&1 || brew install fzf
+    fi
+    if [[ -n "$STARSHIP_PROFILE" ]]; then
+      brew list starship >/dev/null 2>&1 || brew install starship
+    fi
   fi
 elif [[ "$OS" == "Linux" ]]; then
   if [[ -f /etc/os-release ]]; then
@@ -171,6 +212,17 @@ elif [[ "$OS" == "Linux" ]]; then
   fi
 fi
 
+if [[ "$OS" == Linux && ("$INSTALL_SHELL_ICONS" -eq 1 || "$INSTALL_ALL" -eq 1) ]]; then
+  install_symbols_linux
+  for tool in eza fzf; do
+    command -v "$tool" >/dev/null 2>&1 || echo "Optional: install $tool using your distribution's package manager."
+  done
+fi
+if [[ -n "$STARSHIP_PROFILE" ]] && ! command -v starship >/dev/null 2>&1; then
+  echo 'Install Starship using https://starship.rs/guide/#installation, then rerun this command.' >&2
+  exit 1
+fi
+
 # Clone ~/.config/ghostty if invoked via curl | bash
 if [[ ! -f "$TARGET_DIR/config" ]]; then
   if [[ -d "$TARGET_DIR" && ! -d "$TARGET_DIR/.git" ]]; then
@@ -179,7 +231,7 @@ if [[ ! -f "$TARGET_DIR/config" ]]; then
   git clone "$REPO_URL" "$TARGET_DIR"
 fi
 
-chmod +x "$TARGET_DIR/bin/ghostty-theme" "$TARGET_DIR/adapters/macos-terminal/apply-macos-terminal.sh" 2>/dev/null || true
+chmod +x "$TARGET_DIR/bin/ghostty-theme" "$TARGET_DIR/bin/ghostty-shell" "$TARGET_DIR/adapters/macos-terminal/apply-macos-terminal.sh" 2>/dev/null || true
 
 # Link ghostty-theme CLI into ~/.local/bin or /opt/homebrew/bin if writable
 if [[ -d "/opt/homebrew/bin" && -w "/opt/homebrew/bin" ]]; then
@@ -190,6 +242,10 @@ else
   mkdir -p "$HOME/.local/bin"
   ln -sf "$TARGET_DIR/bin/ghostty-theme" "$HOME/.local/bin/ghostty-theme"
 fi
+
+# The shell helper resolves this symlink back to the repository for future syncs.
+mkdir -p "$HOME/.local/bin"
+ln -sf "$TARGET_DIR/bin/ghostty-shell" "$HOME/.local/bin/ghostty-shell"
 
 # Determine OS-specific editor config base path
 if [[ "$OS" == "Darwin" ]]; then
@@ -297,11 +353,11 @@ if [[ ("$INSTALL_ALL" -eq 1 || "$INSTALL_FONTCONFIG" -eq 1) && "$OS" == "Linux" 
 fi
 
 if [[ "$INSTALL_ALL" -eq 1 || "$INSTALL_ZSH" -eq 1 ]]; then
-  touch "$HOME/.zshrc"
-  if ! grep -q "ade-terminal.zsh" "$HOME/.zshrc"; then
-    printf '\n# Dyslexia + ADHD Terminal Ergonomics\nsource "%s/adapters/zsh/ade-terminal.zsh"\n' "$TARGET_DIR" >> "$HOME/.zshrc"
-    echo "✓ Added Zsh hook to ~/.zshrc"
-  fi
+  python3 "$TARGET_DIR/scripts/configure-zsh.py" "${ZDOTDIR:-$HOME}/.zshrc" "$TARGET_DIR"
+fi
+
+if [[ -n "$STARSHIP_PROFILE" ]]; then
+  "$TARGET_DIR/bin/ghostty-shell" profile "$STARSHIP_PROFILE"
 fi
 
 if [[ -n "$INITIAL_THEME" ]]; then
