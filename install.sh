@@ -130,6 +130,7 @@ if [[ "$OS" == "Darwin" ]]; then
   if command -v brew >/dev/null 2>&1; then
     brew list --cask ghostty >/dev/null 2>&1 || brew install --cask ghostty
     brew list --cask font-monaspace >/dev/null 2>&1 || brew install --cask font-monaspace
+    brew list --cask font-symbols-only-nerd-font >/dev/null 2>&1 || brew install --cask font-symbols-only-nerd-font
   fi
 elif [[ "$OS" == "Linux" ]]; then
   if [[ -f /etc/os-release ]]; then
