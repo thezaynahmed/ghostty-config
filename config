@@ -67,8 +67,8 @@ window-padding-color = extend
 window-inherit-font-size = true
 window-inherit-working-directory = true
 
-# Completely hides the massive titlebar while preserving native rounded corners & shadows
-macos-titlebar-style = hidden
+# Seamless transparent titlebar with floating traffic lights for easy window dragging
+macos-titlebar-style = transparent
 macos-window-shadow = true
 macos-option-as-alt = left
 mouse-hide-while-typing = true
