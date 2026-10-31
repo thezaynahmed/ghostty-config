@@ -208,7 +208,10 @@ p = os.path.expanduser("~/.warp/settings.toml")
 if os.path.exists(p):
     with open(p, "r", encoding="utf-8") as f:
         c = f.read()
-    c = re.sub(r"theme\s*=\s*\".*?\"", "theme = \"Gruvbox Material Dark\"", c)
+    # NOTE: Warp's theme field only accepts "dark" or "light" (built-in values).
+    # Custom themes (.yaml files in ~/.warp/themes/) must be selected via
+    # Warp UI → Settings → Appearance → Theme — not set here.
+    c = re.sub(r"theme\s*=\s*\".*?\"", "theme = \"dark\"", c)
     if "font_family" not in c and "[appearance.text]" in c:
         c = c.replace("[appearance.text]", "[appearance.text]\nfont_family = \"Monaspace Neon\"")
     with open(p, "w", encoding="utf-8") as f:
