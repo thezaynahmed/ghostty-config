@@ -214,6 +214,9 @@ fi
 
 if [[ "$INSTALL_ALL" -eq 1 || "$INSTALL_ANTIGRAVITY" -eq 1 ]]; then
   merge_json_settings "$APP_SUPPORT/Antigravity/User/settings.json" "$TARGET_DIR/adapters/antigravity/settings.json"
+  if [[ -d "$APP_SUPPORT/Antigravity IDE/User" ]]; then
+    merge_json_settings "$APP_SUPPORT/Antigravity IDE/User/settings.json" "$TARGET_DIR/adapters/antigravity/settings.json"
+  fi
   echo "✓ Configured Antigravity IDE terminal settings"
 fi
 

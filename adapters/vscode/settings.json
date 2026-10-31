@@ -12,6 +12,7 @@
   "terminal.integrated.gpuAcceleration": "on",
   "terminal.integrated.scrollback": 10000,
   "terminal.integrated.macOptionIsMeta": true,
+  "terminal.external.osxExec": "Ghostty.app",
   "workbench.colorCustomizations": {
     "terminal.background": "#282828",
     "terminal.foreground": "#d4be98",
