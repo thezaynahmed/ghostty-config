@@ -200,7 +200,21 @@ fi
 if [[ "$INSTALL_ALL" -eq 1 || "$INSTALL_WARP" -eq 1 ]]; then
   mkdir -p "$HOME/.warp/themes"
   cp -f "$TARGET_DIR"/adapters/warp/themes/*.yaml "$HOME/.warp/themes/"
-  echo "✓ Installed 18 themes to ~/.warp/themes"
+  if [[ -f "$HOME/.warp/settings.toml" ]]; then
+    python3 -c '
+import os, re
+p = os.path.expanduser("~/.warp/settings.toml")
+if os.path.exists(p):
+    with open(p, "r", encoding="utf-8") as f:
+        c = f.read()
+    c = re.sub(r"theme\s*=\s*\".*?\"", "theme = \"Gruvbox Material Dark\"", c)
+    if "font_family" not in c and "[appearance.text]" in c:
+        c = c.replace("[appearance.text]", "[appearance.text]\nfont_family = \"Monaspace Neon\"")
+    with open(p, "w", encoding="utf-8") as f:
+        f.write(c)
+' 2>/dev/null || true
+  fi
+  echo "✓ Installed 18 themes to ~/.warp/themes and configured Warp settings"
 fi
 
 if [[ "$INSTALL_ALL" -eq 1 || "$INSTALL_CURSOR" -eq 1 ]]; then
