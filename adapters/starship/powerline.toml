@@ -2,7 +2,7 @@
 add_newline = true
 command_timeout = 500
 palette = 'ribbon'
-format = '[╭─](muted)$os$directory[](fg:purple bg:green)$git_branch$git_status[](green)$fill$cmd_duration$character$status$username$hostname$time$line_break[╰─](muted) '
+format = '[╭─](muted)$os$directory($git_branch$git_status[](green))$fill$cmd_duration$character$status$username$hostname$time$line_break[╰─](muted) '
 
 [palettes.ribbon]
 # Standard ANSI slots follow the terminal's active theme; no RGB colors are fixed.
@@ -24,7 +24,7 @@ Linux = ''
 Windows = ''
 
 [directory]
-format = '[  $path$read_only ]($style)'
+format = '[  $path$read_only ]($style)[](purple)'
 style = 'fg:ink bg:purple'
 read_only = ' '
 home_symbol = '~'
