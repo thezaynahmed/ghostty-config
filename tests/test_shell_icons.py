@@ -140,6 +140,14 @@ class ShellIconsTest(unittest.TestCase):
         self.assertIn("Local changes", result.stderr)
 
     @unittest.skipUnless(shutil.which("starship"), "Starship rendering is optional locally")
+    def test_powerline_outside_repo_has_no_empty_git_segment(self):
+        env = dict(self.env, STARSHIP_CONFIG=str(ROOT/'adapters/starship/powerline.toml'), STARSHIP_CACHE=str(self.path/'cache'), TERM='xterm-256color')
+        result = subprocess.run(['starship', 'prompt', '--path', str(self.path), '--logical-path', str(self.path), '--status', '0', '--terminal-width', '140'], env=env, text=True, capture_output=True, check=True)
+        clean = re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', result.stdout)
+        self.assertEqual(clean.count(''), 2, 'Outside Git, draw only the OS and directory segment ends')
+        self.assertNotIn('', clean)
+
+    @unittest.skipUnless(shutil.which("starship"), "Starship rendering is optional locally")
     def test_powerline_profile_and_rendering(self):
         self.cli('profile', 'powerline', check=True)
         selected = self.zsh('ZSH_THEME=previous; source adapters/zsh/prompt-select.zsh; source adapters/zsh/ade-terminal.zsh; print -r -- "$ZSH_THEME|$STARSHIP_CONFIG|$_GHOSTTY_STARSHIP_INITIALIZED"')
@@ -151,12 +159,13 @@ class ShellIconsTest(unittest.TestCase):
         (repo/'untracked.txt').write_text('fixture\n')
         env = dict(self.env, STARSHIP_CONFIG=str(ROOT/'adapters/starship/powerline.toml'), STARSHIP_CACHE=str(self.path/'cache'), TERM='xterm-256color')
         for code in ('0', '7'):
-            result = subprocess.run(['starship', 'prompt', '--path', str(repo), '--status', code, '--terminal-width', '140'], env=env, text=True, capture_output=True, check=True)
+            result = subprocess.run(['starship', 'prompt', '--path', str(repo), '--logical-path', str(repo), '--status', code, '--terminal-width', '140'], env=env, text=True, capture_output=True, check=True)
             clean = re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', result.stdout)
             self.assertIn('main', clean)
             self.assertIn('?1', clean)
             self.assertRegex(clean, r'\d{2}:\d{2}:\d{2} [AP]M')
             self.assertIn('', clean)
+            self.assertEqual(clean.count(''), 3)
             self.assertIn('╰─', clean)
             self.assertNotIn('Unknown', result.stderr)
             self.assertNotIn('Error', result.stderr)
