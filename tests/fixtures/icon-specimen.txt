@@ -1,0 +1,43 @@
+Ghostty shell-icon specimen — research sample, October 31, 2026
+Display this plain UTF-8 file in the terminal being evaluated.
+No ANSI controls. This is a rendering aid, not an automated compatibility result.
+
+ASCII ruler: 1234567890123456789012345678901234567890
+Each row: glyph, bracket probe, canonical Nerd Fonts name, codepoint.
+
+  []  oct-file_directory       U+F413
+  []  oct-file                 U+F4A5
+  []  oct-git_branch           U+F418
+  []  oct-check                U+F42E
+  []  oct-x                    U+F467
+  []  oct-alert                U+F421
+  []  oct-lock                 U+F456
+  []  oct-terminal             U+F489
+  []  oct-server               U+F473
+  []  oct-clock                U+F43A
+  []  seti-python              U+E606
+  []  seti-typescript          U+E628
+  []  dev-docker               U+E7B0
+  []  dev-kubernetes           U+E81D
+󱃾  [󱃾]  md-kubernetes            U+F10FE
+  []  dev-terraform            U+E8BD
+  []  dev-amazonwebservices    U+E7AD
+  []  dev-googlecloud          U+E7F1
+  []  dev-azure                U+E754
+  []  pl-left_hard_divider     U+E0B0
+
+Alignment probes (compare ends visually):
+[] [A] [i] [W] | oct-file_directory
+[] [A] [i] [W] | oct-git_branch
+[󱃾] [A] [i] [W] | md-kubernetes
+[] [A] [i] [W] | dev-docker
+
+Filename probes:
+  example.ts
+  folder with spaces/
+  日本語.txt
+
+Portable alternatives: dir:  git:main  ERROR  WARN  SSH  K8S:prod/default  AWS:prod
+
+Some newer developer glyphs deliberately probe version coverage.
+A missing icon indicates a coverage/fallback issue, not a reason to assume all icons work.

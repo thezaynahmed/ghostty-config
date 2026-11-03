@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# Select repository-owned shell profiles without rewriting a user's prompt config.
+set -euo pipefail
+
+script_path="${BASH_SOURCE[0]}"
+while [[ -L "$script_path" ]]; do
+  script_dir="$(cd -P "$(dirname "$script_path")" && pwd)"
+  script_path="$(readlink "$script_path")"
+  [[ "$script_path" = /* ]] || script_path="$script_dir/$script_path"
+done
+repo_dir="$(cd -P "$(dirname "$script_path")/.." && pwd)"
+state_dir="${GHOSTTY_SHELL_STATE_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/ghostty-shell}"
+
+read_setting() {
+  local value="$2"
+  [[ ! -f "$state_dir/$1" ]] || IFS= read -r value < "$state_dir/$1" || true
+  printf '%s\n' "$value"
+}
+
+write_setting() {
+  local temporary
+  umask 077
+  mkdir -p "$state_dir"
+  temporary="$(mktemp "$state_dir/.$1.XXXXXX")"
+  printf '%s\n' "$2" > "$temporary"
+  mv -f "$temporary" "$state_dir/$1"
+}
+
+case "${1:---help}" in
+  profile)
+    if [[ $# -eq 1 ]]; then read_setting profile off; exit 0; fi
+    [[ $# -eq 2 ]] || { echo 'Usage: ghostty-shell profile minimal|context|portable|off' >&2; exit 2; }
+    case "$2" in
+      minimal|context|portable)
+        command -v starship >/dev/null 2>&1 || {
+          echo 'Install Starship first: https://starship.rs/guide/#installation' >&2; exit 1;
+        }
+        ;;
+      off) ;;
+      *) echo "Unknown profile: $2" >&2; exit 2 ;;
+    esac
+    write_setting profile "$2"
+    echo "Prompt profile: $2. Open a new shell to apply."
+    ;;
+  icons)
+    if [[ $# -eq 1 ]]; then read_setting icons auto; exit 0; fi
+    [[ $# -eq 2 ]] || { echo 'Usage: ghostty-shell icons auto|never' >&2; exit 2; }
+    case "$2" in auto|never) ;; *) echo "Unknown icon mode: $2" >&2; exit 2 ;; esac
+    write_setting icons "$2"
+    echo "File icons: $2. Open a new shell to apply."
+    ;;
+  doctor)
+    printf 'Prompt profile: %s\nFile icons: %s\n' "$(read_setting profile off)" "$(read_setting icons auto)"
+    for tool in eza fzf starship; do
+      if command -v "$tool" >/dev/null 2>&1; then
+        printf '%-10s %s\n' "$tool" "$(command -v "$tool")"
+      else
+        printf '%-10s not installed (optional)\n' "$tool"
+      fi
+    done
+    echo 'Ghostty embeds Nerd Font symbols; other terminals need a compatible installed font.'
+    echo 'Run ghostty-shell specimen in each terminal to inspect glyph coverage and alignment.'
+    ;;
+  specimen) cat "$repo_dir/tests/fixtures/icon-specimen.txt" ;;
+  sync)
+    [[ -z "$(git -C "$repo_dir" status --porcelain)" ]] || {
+      echo 'Local changes found. Commit or stash them before syncing.' >&2; exit 1;
+    }
+    git -C "$repo_dir" pull --ff-only
+    echo 'Configuration synced. Open a new shell to load the updated adapter.'
+    ;;
+  --help|-h)
+    cat <<'EOF'
+Usage: ghostty-shell COMMAND
+  profile [minimal|context|portable|off]  Select an opt-in Starship prompt
+  icons [auto|never]                    Select file-listing icons
+  doctor                               Check optional tools and selected settings
+  specimen                             Print a Nerd Font rendering specimen
+  sync                                 Pull tracked changes with --ff-only
+
+The default profile is off, preserving your existing prompt. Selection applies
+to new shells. No package installation or application icon changes are performed.
+EOF
+    ;;
+  *) echo "Unknown command: $1 (see ghostty-shell --help)" >&2; exit 2 ;;
+esac

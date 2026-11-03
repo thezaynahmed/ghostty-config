@@ -1,0 +1,38 @@
+name: Shell quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  zsh-and-shell-icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zsh eza fzf
+      - name: Install pinned Starship
+        run: |
+          curl --fail --location --silent --show-error \
+            https://github.com/starship/starship/releases/download/v1.27.0/starship-x86_64-unknown-linux-musl.tar.gz \
+            --output "$RUNNER_TEMP/starship.tar.gz"
+          echo '10c8eb4cb3b761d9bf59ea828444c2dab36c900b7d69a69e08814b286969df89  '"$RUNNER_TEMP/starship.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/starship.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - name: Check shell syntax
+        run: |
+          for script in install.sh bin/ghostty-shell; do bash -n "$script"; done
+          for script in adapters/zsh/*.zsh; do zsh -n "$script"; done
+          python3 -m py_compile scripts/configure-zsh.py tests/test_shell_icons.py
+      - name: Check profile TOML
+        run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path("adapters/starship").glob("*.toml")]'
+      - name: Run shell icon tests
+        env:
+          STARSHIP_CACHE: ${{ runner.temp }}/starship-cache
+        run: python3 -m unittest discover -s tests -v

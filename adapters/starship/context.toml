@@ -1,0 +1,93 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+add_newline = true
+command_timeout = 500
+format = '$username$hostname$directory$git_branch$git_status$nodejs$python$golang$rust$terraform$cmd_duration$line_break$status$jobs$character'
+right_format = '$kubernetes$aws$azure'
+
+[directory]
+format = '[ $path]($style)[$read_only]($read_only_style) '
+style = 'bold blue'
+read_only = ' '
+truncation_length = 4
+truncate_to_repo = true
+
+[git_branch]
+symbol = ' '
+format = '[$symbol$branch]($style) '
+style = 'bold purple'
+
+[git_status]
+style = 'yellow'
+modified = '!${count}'
+staged = '+${count}'
+untracked = '?${count}'
+deleted = '-${count}'
+
+[username]
+show_always = false
+format = '[$user]($style)'
+
+[hostname]
+ssh_only = true
+format = '[@$hostname]($style) '
+
+[nodejs]
+symbol = ' '
+format = '[$symbol$version]($style) '
+
+[python]
+symbol = ' '
+format = '[${symbol}${pyenv_prefix}${version}( $virtualenv)]($style) '
+
+[golang]
+symbol = ' '
+format = '[$symbol$version]($style) '
+
+[rust]
+symbol = ' '
+format = '[$symbol$version]($style) '
+
+[terraform]
+symbol = '󱁢 '
+format = '[$symbol$workspace]($style) '
+
+[cmd_duration]
+min_time = 2000
+format = '[ $duration]($style) '
+style = 'yellow'
+
+[status]
+disabled = false
+format = '[exit:$status]($style) '
+style = 'bold red'
+
+[jobs]
+symbol = 'jobs:'
+format = '[$symbol$number]($style) '
+
+[character]
+success_symbol = '[❯](bold green)'
+error_symbol = '[❯](bold red)'
+vimcmd_symbol = '[❮](bold purple)'
+
+# These read local configuration; they do not switch accounts or enforce access.
+[kubernetes]
+disabled = false
+symbol = '󱃾 '
+format = '[$symbol$context( / $namespace)]($style) '
+style = 'cyan'
+
+[[kubernetes.contexts]]
+context_pattern = '(?i).*prod.*'
+style = 'bold red'
+
+[aws]
+symbol = 'AWS '
+format = '[$symbol($profile)( / $region)]($style) '
+style = 'bold yellow'
+
+[azure]
+disabled = false
+symbol = 'Azure '
+format = '[$symbol$subscription]($style) '
+style = 'bold blue'
