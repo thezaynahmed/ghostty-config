@@ -10,7 +10,7 @@ import time
 def configure(path: pathlib.Path, repo: pathlib.Path) -> bool:
     original = path.read_text() if path.exists() else ""
     content = re.sub(
-        r"(?m)^# >>> ghostty shell (?:prompt|adapter) >>>\n.*?^# <<< ghostty shell (?:prompt|adapter) <<<\n?",
+        r"(?m)^# >>> ghostty shell (?:instant prompt guard|prompt|adapter) >>>\n.*?^# <<< ghostty shell (?:instant prompt guard|prompt|adapter) <<<\n?",
         "", original, flags=re.DOTALL,
     )
     # Migrate the legacy standalone source line produced by install.sh.
@@ -25,6 +25,27 @@ def configure(path: pathlib.Path, repo: pathlib.Path) -> bool:
             continue
         lines.append(line)
     content = "\n".join(lines)
+    # Powerlevel10k's generated instant-prompt block runs before theme selection.
+    # Set a flag from the plain-text profile so that block can be skipped for Starship.
+    guard_block = (
+        "# >>> ghostty shell instant prompt guard >>>\n"
+        "typeset _ghostty_early_profile=\"${GHOSTTY_STARSHIP_PROFILE:-}\"\n"
+        "if [[ -z \"$_ghostty_early_profile\" ]]; then\n"
+        "  _ghostty_early_state=\"${GHOSTTY_SHELL_STATE_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/ghostty-shell}/profile\"\n"
+        "  [[ ! -f \"$_ghostty_early_state\" ]] || IFS= read -r _ghostty_early_profile < \"$_ghostty_early_state\"\n"
+        "fi\n"
+        "if [[ \"$_ghostty_early_profile\" == minimal || \"$_ghostty_early_profile\" == context || \"$_ghostty_early_profile\" == portable ]] && command -v starship >/dev/null 2>&1; then\n"
+        "  typeset -g GHOSTTY_STARSHIP_ACTIVE=1\n"
+        "fi\n"
+        "unset _ghostty_early_profile _ghostty_early_state\n"
+        "# <<< ghostty shell instant prompt guard <<<\n"
+    )
+    content = guard_block + content.lstrip("\n")
+    # Guard the user's existing P10k instant prompt snippet while Starship is active.
+    content = content.replace(
+        'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then',
+        'if [[ "${GHOSTTY_STARSHIP_ACTIVE:-0}" != 1 && -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then',
+    )
     prompt_block = (
         "# >>> ghostty shell prompt >>>\n"
         f"source {shlex.quote(str(repo / 'adapters/zsh/prompt-select.zsh'))}\n"

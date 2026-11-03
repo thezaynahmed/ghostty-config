@@ -54,11 +54,13 @@ class ShellIconsTest(unittest.TestCase):
 
     def test_configure_is_idempotent_and_backs_up_original(self):
         zshrc = self.path / ".zshrc"
-        original = 'ZSH_THEME="powerlevel10k/powerlevel10k"\nsource "$ZSH/oh-my-zsh.sh"\n# user alias\nalias mine="echo mine"\n'
+        original = '# Enable Powerlevel10k instant prompt.\nif [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then\n  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"\nfi\nZSH_THEME="powerlevel10k/powerlevel10k"\nsource "$ZSH/oh-my-zsh.sh"\n# user alias\nalias mine="echo mine"\n'
         zshrc.write_text(original)
         self.assertTrue(configure.configure(zshrc, ROOT))
         first = zshrc.read_text()
         self.assertIn('ZSH_THEME="powerlevel10k/powerlevel10k"', first)
+        self.assertIn('GHOSTTY_STARSHIP_ACTIVE:-0', first)
+        self.assertIn("ghostty shell instant prompt guard", first)
         self.assertLess(first.index("prompt-select.zsh"), first.index("oh-my-zsh.sh"))
         self.assertIn('alias mine="echo mine"', first)
         self.assertFalse(configure.configure(zshrc, ROOT))
@@ -66,6 +68,13 @@ class ShellIconsTest(unittest.TestCase):
         backups = list(self.path.glob(".zshrc.backup.*"))
         self.assertEqual(len(backups), 1)
         self.assertEqual(backups[0].read_text(), original)
+
+    def test_early_guard_selects_starship_and_suppresses_p10k_instant_prompt(self):
+        zshrc = self.path / ".zshrc"
+        zshrc.write_text('if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then\n  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"\nfi\nZSH_THEME="powerlevel10k/powerlevel10k"\nsource "$ZSH/oh-my-zsh.sh"\n')
+        configure.configure(zshrc, ROOT)
+        result = self.zsh(f'GHOSTTY_SHELL_STATE_DIR={self.env["GHOSTTY_SHELL_STATE_DIR"]!r}; mkdir -p "$GHOSTTY_SHELL_STATE_DIR"; print context > "$GHOSTTY_SHELL_STATE_DIR/profile"; source {str(zshrc)!r}; print -r -- "$GHOSTTY_STARSHIP_ACTIVE|$ZSH_THEME"')
+        self.assertIn("1|", result.stdout)
 
     def test_symlink_finds_repo(self):
         link = self.path / "shell helper"

@@ -26,7 +26,11 @@ To configure only specific tools, pass individual flags to `install.sh`:
 - `--tmux`: Append pane dimming and truecolor rules to `~/.tmux.conf`.
 - `--linux-fontconfig`: Install Linux Fontconfig rules to `~/.config/fontconfig/conf.d/`.
 - `--zsh`: Source the steady-cursor Zsh hook in `~/.zshrc`.
+- `--shell-icons`: Configure eza/fzf shell icons and the Zsh adapter.
+- `--starship <minimal|context|portable>`: Select an optional Starship prompt profile.
 - `--theme <name>`: Switch the active Ghostty theme.
+
+For profile changes, troubleshooting, Linux prerequisites, and sync behavior, see [`docs/shell-icons.md`](docs/shell-icons.md). The shell icon integration keeps its profile selection under `~/.config/ghostty-shell/`; do not commit local selections.
 
 ## 2. Theme Switching
 
