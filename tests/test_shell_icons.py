@@ -18,7 +18,7 @@ class ShellIconsTest(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix="ghostty shell ")
         self.addCleanup(self.temp.cleanup)
         self.path = Path(self.temp.name)
-        self.env = dict(os.environ, GHOSTTY_SHELL_STATE_DIR=str(self.path / "state"))
+        self.env = dict(os.environ, GHOSTTY_SHELL_STATE_DIR=str(self.path / "state"), ZDOTDIR=str(self.path))
         self.env.pop("GHOSTTY_STARSHIP_PROFILE", None)
         self.env.pop("GHOSTTY_SHELL_ICONS", None)
 
@@ -86,6 +86,16 @@ class ShellIconsTest(unittest.TestCase):
         result = self.zsh(f'path=(/usr/bin /bin); ZSH_THEME=p10k; source adapters/zsh/prompt-select.zsh; path+=({str(tools)!r}); PROMPT=original; source adapters/zsh/ade-terminal.zsh; print -r -- "$ZSH_THEME|$PROMPT"')
         self.assertEqual(result.stdout.strip(), 'p10k|original')
 
+    def test_profile_selection_migrates_old_installed_guard(self):
+        zshrc = self.path / '.zshrc'
+        zshrc.write_text('# >>> ghostty shell instant prompt guard >>>\ntypeset -g GHOSTTY_SKIP_P10K_INSTANT=0\n# <<< ghostty shell instant prompt guard <<<\nalias mine="echo preserved"\n')
+        self.cli('profile', 'powerline', check=True)
+        self.assertIn('prompt-guard.zsh', zshrc.read_text())
+        self.assertIn('alias mine="echo preserved"', zshrc.read_text())
+        result = self.zsh(f'source {str(zshrc)!r}; print -r -- "$GHOSTTY_SKIP_P10K_INSTANT"')
+        self.assertEqual(result.stdout.strip(), '1')
+        self.assertEqual(len(list(self.path.glob('.zshrc.backup.*'))), 1)
+
     def test_symlink_finds_repo(self):
         link = self.path / "shell helper"
         link.symlink_to(ROOT / "bin/ghostty-shell")
@@ -128,6 +138,34 @@ class ShellIconsTest(unittest.TestCase):
         result = subprocess.run([str(repo / "bin/ghostty-shell"), "sync"], text=True, capture_output=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Local changes", result.stderr)
+
+    @unittest.skipUnless(shutil.which("starship"), "Starship rendering is optional locally")
+    def test_powerline_profile_and_rendering(self):
+        self.cli('profile', 'powerline', check=True)
+        selected = self.zsh('ZSH_THEME=previous; source adapters/zsh/prompt-select.zsh; source adapters/zsh/ade-terminal.zsh; print -r -- "$ZSH_THEME|$STARSHIP_CONFIG|$_GHOSTTY_STARSHIP_INITIALIZED"')
+        self.assertIn('|'+str(ROOT/'adapters/starship/powerline.toml')+'|1', selected.stdout)
+        repo = self.path / 'project'
+        repo.mkdir()
+        subprocess.run(['git', 'init', '-q', '--initial-branch=main', str(repo)], check=True)
+        subprocess.run(['git', '-C', str(repo), '-c', 'user.name=Test User', '-c', 'user.email=test@example.invalid', 'commit', '-q', '--allow-empty', '-m', 'fixture'], check=True)
+        (repo/'untracked.txt').write_text('fixture\n')
+        env = dict(self.env, STARSHIP_CONFIG=str(ROOT/'adapters/starship/powerline.toml'), STARSHIP_CACHE=str(self.path/'cache'), TERM='xterm-256color')
+        for code in ('0', '7'):
+            result = subprocess.run(['starship', 'prompt', '--path', str(repo), '--status', code, '--terminal-width', '140'], env=env, text=True, capture_output=True, check=True)
+            clean = re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', result.stdout)
+            self.assertIn('main', clean)
+            self.assertIn('?1', clean)
+            self.assertRegex(clean, r'\d{2}:\d{2}:\d{2} [AP]M')
+            self.assertIn('', clean)
+            self.assertIn('╰─', clean)
+            self.assertNotIn('Unknown', result.stderr)
+            self.assertNotIn('Error', result.stderr)
+            self.assertNotRegex(result.stdout, r'\x1b\[[0-9;]*(?:38|48);2;', 'Powerline must use theme ANSI colors rather than RGB escape sequences')
+            if code == '7':
+                self.assertIn('exit:7', clean)
+            else:
+                self.assertIn('✔', clean)
+                self.assertNotIn('exit:0', clean)
 
     @unittest.skipUnless(shutil.which("starship"), "Starship rendering is optional locally")
     def test_profiles_render_failure_and_production_context(self):

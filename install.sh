@@ -51,7 +51,7 @@ Options:
   --linux-fontconfig  Install Linux Fontconfig OpenType & hinting rules (Linux)
   --zsh               Add steady-cursor & contrast hook to ~/.zshrc
   --shell-icons       Set up eza/fzf dependencies and the Zsh icon adapter
-  --starship <profile> Opt into minimal, context, or portable Starship prompt
+  --starship <profile> Opt into minimal, context, powerline, or portable Starship prompt
   -h, --help          Show this help message
 EOF
 }
@@ -75,7 +75,7 @@ while [[ $# -gt 0 ]]; do
     --zsh) INSTALL_ZSH=1; shift ;;
     --shell-icons) INSTALL_SHELL_ICONS=1; INSTALL_ZSH=1; shift ;;
     --starship)
-      case "${2:-}" in minimal|context|portable) STARSHIP_PROFILE="$2" ;; *) echo 'Expected --starship minimal|context|portable' >&2; exit 2 ;; esac
+      case "${2:-}" in minimal|context|powerline|portable) STARSHIP_PROFILE="$2" ;; *) echo 'Expected --starship minimal|context|powerline|portable' >&2; exit 2 ;; esac
       INSTALL_SHELL_ICONS=1; INSTALL_ZSH=1; shift 2 ;;
     --linux-fontconfig) INSTALL_FONTCONFIG=1; shift ;;
     --theme) INITIAL_THEME="${2:-}"; shift 2 ;;

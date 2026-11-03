@@ -16,7 +16,7 @@ fi
 if [[ -z "$_ghostty_icons" && -f "$_ghostty_state_dir/icons" ]]; then
   IFS= read -r _ghostty_icons < "$_ghostty_state_dir/icons"
 fi
-case "$_ghostty_profile" in minimal|context|portable|off) ;; *) _ghostty_profile=off ;; esac
+case "$_ghostty_profile" in minimal|context|powerline|portable|off) ;; *) _ghostty_profile=off ;; esac
 case "$_ghostty_icons" in auto|never) ;; *) _ghostty_icons=auto ;; esac
 [[ "$_ghostty_profile" != portable ]] || _ghostty_icons=never
 

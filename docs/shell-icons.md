@@ -27,6 +27,7 @@ The installer installs the pinned Nerd Fonts Symbols Only v3.5.1 font archive af
 | --- | --- |
 | `minimal` | Compact path, Git branch/status, command duration, and failure indicator. Nerd Font symbols are used. |
 | `context` | Minimal details plus SSH host, language/toolchain, jobs, AWS/Azure, and Kubernetes context. A context whose name contains `prod` is red and bold. |
+| `powerline` | A two-line ribbon with blue OS, lavender path, green Git, and pink user segments; command status and a blue 12-hour clock align to the right of the header. |
 | `portable` | ASCII prompt and file listings, avoiding Nerd Font glyph assumptions on remote hosts and logs. |
 | `off` | Starship is disabled; the prompt configured before this integration (including Powerlevel10k, if configured) is used again. |
 
@@ -34,19 +35,23 @@ Use `ghostty-shell profile context` to change the selected profile. It takes eff
 
 Starship must be on `PATH` before Oh My Zsh loads. Put any custom Starship `PATH` setup above `source "$ZSH/oh-my-zsh.sh"`. If it is unavailable at that point, the integration keeps the existing theme for that shell instead of initializing a second prompt later.
 
+For the segmented Powerlevel10k-style appearance, select `ghostty-shell profile powerline` and open a new shell. It uses Starship's built-in fill module to align the clock on the header above the input line. The user and Git labels reflect the current machine/repository. For narrow panes, `minimal` provides a smaller prompt. Powerline separators need the same Nerd Font symbol support as the icon profiles.
+
+The Powerline colors use the terminal's ANSI palette slots, including blue, magenta, green, and bright magenta. They follow the active terminal theme instead of fixing RGB colors. Switch a Ghostty theme normally with `ghostty-theme` and reload Ghostty to update those colors.
+
 `ghostty-shell icons auto|never` selects eza and fzf-tab icon behavior. `auto` lets eza decide based on output/terminal capabilities; `never` disables glyphs. The `portable` profile also disables file icons. Install/configure the `fzf-tab` Oh My Zsh plugin separately if interactive tab completion previews are desired. Follow the [upstream load-order guidance](https://github.com/Aloxaf/fzf-tab#install): after `compinit`, and before plugins that wrap Zsh widgets, such as `zsh-autosuggestions` and `fast-syntax-highlighting`.
 
 ## Commands
 
 ```text
-ghostty-shell profile [minimal|context|portable|off]
+ghostty-shell profile [minimal|context|powerline|portable|off]
 ghostty-shell icons [auto|never]
 ghostty-shell doctor
 ghostty-shell specimen
 ghostty-shell sync
 ```
 
-`doctor` shows selected modes and available commands. `specimen` prints the plain-text icon sample for checking font rendering. `sync` runs `git pull --ff-only` only when the repository checkout is clean; it does not change the saved profile. Review updates before restarting a shell if using a fork or local modifications.
+`doctor` shows selected modes and available commands. `specimen` prints the plain-text icon sample for checking font rendering. `sync` runs `git pull --ff-only` only when the repository checkout is clean; it does not change the saved profile. Both `sync` and selecting a profile refresh existing repository-managed `.zshrc` hooks, with backups when changed, so older installations can use new profiles safely. They do not add hooks to an unmanaged `.zshrc`. Review updates before restarting a shell if using a fork or local modifications.
 
 The installer backs up `.zshrc` before adding its managed blocks, preserves existing aliases and the selected P10k theme, and makes the Starship selection before Oh My Zsh initializes its theme. When Starship is selected, it skips the existing P10k instant-prompt snippet. Choosing `off` restores the prior P10k flow in the next shell. To remove the integration entirely, restore the `.zshrc.backup.*` file created during installation.
 

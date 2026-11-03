@@ -29,16 +29,7 @@ def configure(path: pathlib.Path, repo: pathlib.Path) -> bool:
     # Set a flag from the plain-text profile so that block can be skipped for Starship.
     guard_block = (
         "# >>> ghostty shell instant prompt guard >>>\n"
-        "typeset -g GHOSTTY_SKIP_P10K_INSTANT=0\n"
-        "typeset _ghostty_early_profile=\"${GHOSTTY_STARSHIP_PROFILE:-}\"\n"
-        "if [[ -z \"$_ghostty_early_profile\" ]]; then\n"
-        "  _ghostty_early_state=\"${GHOSTTY_SHELL_STATE_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/ghostty-shell}/profile\"\n"
-        "  [[ ! -f \"$_ghostty_early_state\" ]] || IFS= read -r _ghostty_early_profile < \"$_ghostty_early_state\"\n"
-        "fi\n"
-        "if [[ \"$_ghostty_early_profile\" == minimal || \"$_ghostty_early_profile\" == context || \"$_ghostty_early_profile\" == portable ]]; then\n"
-        "  GHOSTTY_SKIP_P10K_INSTANT=1\n"
-        "fi\n"
-        "unset _ghostty_early_profile _ghostty_early_state\n"
+        f"source {shlex.quote(str(repo / 'adapters/zsh/prompt-guard.zsh'))}\n"
         "# <<< ghostty shell instant prompt guard <<<\n"
     )
     content = guard_block + content.lstrip("\n")
