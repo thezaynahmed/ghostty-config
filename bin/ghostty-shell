@@ -26,12 +26,20 @@ write_setting() {
   mv -f "$temporary" "$state_dir/$1"
 }
 
+refresh_zsh_hooks() {
+  local zshrc="${ZDOTDIR:-$HOME}/.zshrc"
+  # Only migrate hooks already installed by this repository, preserving user files.
+  if [[ -f "$zshrc" ]] && grep -Fq '# >>> ghostty shell instant prompt guard >>>' "$zshrc"; then
+    python3 "$repo_dir/scripts/configure-zsh.py" "$zshrc" "$repo_dir"
+  fi
+}
+
 case "${1:---help}" in
   profile)
     if [[ $# -eq 1 ]]; then read_setting profile off; exit 0; fi
-    [[ $# -eq 2 ]] || { echo 'Usage: ghostty-shell profile minimal|context|portable|off' >&2; exit 2; }
+    [[ $# -eq 2 ]] || { echo 'Usage: ghostty-shell profile minimal|context|powerline|portable|off' >&2; exit 2; }
     case "$2" in
-      minimal|context|portable)
+      minimal|context|powerline|portable)
         command -v starship >/dev/null 2>&1 || {
           echo 'Install Starship first: https://starship.rs/guide/#installation' >&2; exit 1;
         }
@@ -39,6 +47,7 @@ case "${1:---help}" in
       off) ;;
       *) echo "Unknown profile: $2" >&2; exit 2 ;;
     esac
+    refresh_zsh_hooks
     write_setting profile "$2"
     echo "Prompt profile: $2. Open a new shell to apply."
     ;;
@@ -67,12 +76,13 @@ case "${1:---help}" in
       echo 'Local changes found. Commit or stash them before syncing.' >&2; exit 1;
     }
     git -C "$repo_dir" pull --ff-only
+    refresh_zsh_hooks
     echo 'Configuration synced. Open a new shell to load the updated adapter.'
     ;;
   --help|-h)
     cat <<'EOF'
 Usage: ghostty-shell COMMAND
-  profile [minimal|context|portable|off]  Select an opt-in Starship prompt
+  profile [minimal|context|powerline|portable|off]  Select an opt-in Starship prompt
   icons [auto|never]                    Select file-listing icons
   doctor                               Check optional tools and selected settings
   specimen                             Print a Nerd Font rendering specimen

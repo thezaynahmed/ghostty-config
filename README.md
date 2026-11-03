@@ -59,7 +59,7 @@ ghostty-theme gruvbox
 
 ### 4. Shell Icons and Prompt
 
-For Zsh, `eza` adds file icons and Git status; `fzf` with `fzf-tab` adds icon-aware interactive completion. The optional Starship prompt has **minimal**, **context**, and **portable** profiles. `context` adds cloud, Kubernetes, SSH, language, and job context, with production Kubernetes contexts highlighted.
+For Zsh, `eza` adds file icons and Git status; `fzf` with `fzf-tab` adds icon-aware interactive completion. The optional Starship prompt has **minimal**, **context**, **powerline**, and **portable** profiles. `context` adds cloud, Kubernetes, SSH, language, and job context, with production Kubernetes contexts highlighted. `powerline` uses colored arrow segments, Git status, and a clock aligned to the right of its header.
 
 ```bash
 ./install.sh --starship context
@@ -67,12 +67,13 @@ ghostty-shell doctor
 ghostty-shell specimen
 ghostty-shell profile minimal   # compact prompt
 ghostty-shell profile context   # contextual prompt
+ghostty-shell profile powerline # colored segments and a right-aligned clock
 ghostty-shell profile portable  # ASCII-only portable prompt and file listings
 ghostty-shell profile off       # restore the prompt configured before Starship
 ghostty-shell icons never       # disable file and completion icons
 ```
 
-The selection is stored in `~/.config/ghostty-shell/`, outside the repository. Open a new shell after changing profiles. Setup details, Linux prerequisites, and sync instructions are in [`docs/shell-icons.md`](docs/shell-icons.md).
+The selection is stored in `~/.config/ghostty-shell/`, outside the repository. Open a new shell after changing profiles. Powerline colors follow the active terminal theme's ANSI palette. Setup details, Linux prerequisites, and sync instructions are in [`docs/shell-icons.md`](docs/shell-icons.md).
 
 ---
 

@@ -1,0 +1,78 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+add_newline = true
+command_timeout = 500
+palette = 'ribbon'
+format = '[╭─](muted)$os$directory[](fg:purple bg:green)$git_branch$git_status[](green)$fill$cmd_duration$character$status$username$hostname$time$line_break[╰─](muted) '
+
+[palettes.ribbon]
+# Standard ANSI slots follow the terminal's active theme; no RGB colors are fixed.
+blue = '4'
+purple = '5'
+green = '2'
+pink = '13'
+ink = '0'
+muted = '8'
+danger = '1'
+
+[os]
+disabled = false
+format = '[ $symbol ](fg:ink bg:blue)[](fg:blue bg:purple)'
+
+[os.symbols]
+Macos = ''
+Linux = ''
+Windows = ''
+
+[directory]
+format = '[  $path$read_only ]($style)'
+style = 'fg:ink bg:purple'
+read_only = ' '
+home_symbol = '~'
+truncation_length = 3
+truncation_symbol = '…/'
+truncate_to_repo = true
+
+[git_branch]
+symbol = ' '
+format = '[  $symbol$branch ]($style)'
+style = 'fg:ink bg:green'
+
+[git_status]
+format = '([$all_status$ahead_behind ]($style))'
+style = 'fg:ink bg:green'
+modified = '!${count}'
+staged = '+${count}'
+untracked = '?${count}'
+deleted = '-${count}'
+
+[fill]
+symbol = ' '
+
+[cmd_duration]
+min_time = 2000
+format = '[ $duration ](yellow)'
+
+[character]
+format = ' $symbol '
+success_symbol = '[✔](bold green)'
+error_symbol = '[✘](bold danger)'
+vimcmd_symbol = '[❮](bold purple)'
+
+[status]
+disabled = false
+format = '[exit:$status ](bold danger)'
+
+[username]
+show_always = true
+format = '[](pink)[ $user  ]($style)'
+style_user = 'fg:ink bg:pink'
+style_root = 'bold fg:ink bg:pink'
+
+[hostname]
+ssh_only = true
+format = '[@$hostname ](fg:ink bg:pink)'
+
+[time]
+disabled = false
+time_format = '%I:%M:%S %p'
+format = '[](fg:blue bg:pink)[ $time  ](fg:ink bg:blue)'
