@@ -30,9 +30,9 @@ The installer installs the pinned Nerd Fonts Symbols Only v3.5.1 font archive af
 | `portable` | ASCII prompt and file listings, avoiding Nerd Font glyph assumptions on remote hosts and logs. |
 | `off` | Starship is disabled; the prompt configured before this integration (including Powerlevel10k, if configured) is used again. |
 
-Use `ghostty-shell profile context` to change the selected profile. It takes effect in the next shell. A saved `GHOSTTY_STARSHIP_PROFILE` environment variable can override the saved choice. Profiles use repository TOML and do not overwrite `~/.config/starship.toml`; the adapter sets `STARSHIP_CONFIG` only in shells using a selected profile.
+Use `ghostty-shell profile context` to change the selected profile. It takes effect in the next shell. The `GHOSTTY_STARSHIP_PROFILE` environment variable can override the saved choice. Profiles use repository TOML and do not overwrite `~/.config/starship.toml`; the adapter sets `STARSHIP_CONFIG` only in shells using a selected profile.
 
-`ghostty-shell icons auto|never` selects eza and fzf-tab icon behavior. `auto` lets eza decide based on output/terminal capabilities; `never` disables glyphs. The `portable` profile also disables file icons. Install/configure the `fzf-tab` Oh My Zsh plugin separately if interactive tab completion previews are desired. Its plugin should load after the `fzf` plugin, as documented upstream.
+`ghostty-shell icons auto|never` selects eza and fzf-tab icon behavior. `auto` lets eza decide based on output/terminal capabilities; `never` disables glyphs. The `portable` profile also disables file icons. Install/configure the `fzf-tab` Oh My Zsh plugin separately if interactive tab completion previews are desired. Follow the [upstream load-order guidance](https://github.com/Aloxaf/fzf-tab#install): after `compinit`, and before plugins that wrap Zsh widgets, such as `zsh-autosuggestions` and `fast-syntax-highlighting`.
 
 ## Commands
 
@@ -50,7 +50,7 @@ The installer backs up `.zshrc` before adding its managed blocks, preserves exis
 
 ## Third-party licenses
 
-No upstream source or binary is vendored in this repository. The referenced projects retain their own licenses: [Starship (ISC)](https://github.com/starship/starship/blob/master/LICENSE), [eza (EUPL-1.2)](https://github.com/eza-community/eza/blob/main/LICENSE), [fzf (MIT)](https://github.com/junegunn/fzf/blob/master/LICENSE), [fzf-tab (MIT)](https://github.com/Aloxaf/fzf-tab/blob/master/LICENSE), [Monaspace (OFL-1.1)](https://github.com/githubnext/monaspace/blob/main/LICENSE), and [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts/blob/master/license.txt) (upstream font/license terms vary). The repository's MIT license applies to original repository files, not those third-party projects.
+No upstream source or binary is vendored in this repository. The referenced projects retain their own licenses: [Starship (ISC)](https://github.com/starship/starship/blob/master/LICENSE), [eza (EUPL-1.2)](https://github.com/eza-community/eza/blob/main/LICENSE.txt), [fzf (MIT)](https://github.com/junegunn/fzf/blob/master/LICENSE), [fzf-tab (MIT)](https://github.com/Aloxaf/fzf-tab/blob/master/LICENSE), [Monaspace (OFL-1.1)](https://github.com/githubnext/monaspace/blob/main/LICENSE), and [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts/blob/master/license.txt) (upstream font/license terms vary). The repository's MIT license applies to original repository files, not those third-party projects.
 
 ## Updating pinned setup dependencies
 
