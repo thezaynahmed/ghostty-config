@@ -27,8 +27,8 @@ jobs:
           echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
       - name: Check shell syntax
         run: |
-          bash -n install.sh bin/ghostty-shell
-          zsh -n adapters/zsh/ade-terminal.zsh adapters/zsh/prompt-select.zsh
+          for script in install.sh bin/ghostty-shell; do bash -n "$script"; done
+          for script in adapters/zsh/*.zsh; do zsh -n "$script"; done
           python3 -m py_compile scripts/configure-zsh.py tests/test_shell_icons.py
       - name: Check profile TOML
         run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path("adapters/starship").glob("*.toml")]'

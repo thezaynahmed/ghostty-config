@@ -258,7 +258,7 @@ if [[ "$INSTALL_ALL" -eq 1 || "$INSTALL_WARP" -eq 1 ]]; then
   mkdir -p "$HOME/.warp/themes"
   cp -f "$TARGET_DIR"/adapters/warp/themes/*.yaml "$HOME/.warp/themes/"
   if [[ -f "$HOME/.warp/settings.toml" ]]; then
-    python3 -c '
+    python3 - <<'PY' 2>/dev/null || true
 import os, re
 p = os.path.expanduser("~/.warp/settings.toml")
 if os.path.exists(p):
@@ -272,7 +272,7 @@ if os.path.exists(p):
         c = c.replace("[appearance.text]", "[appearance.text]\nfont_family = \"Monaspace Neon\"")
     with open(p, "w", encoding="utf-8") as f:
         f.write(c)
-' 2>/dev/null || true
+PY
   fi
   echo "✓ Installed 18 themes to ~/.warp/themes and configured Warp settings"
 fi
