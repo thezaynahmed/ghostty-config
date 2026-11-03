@@ -32,6 +32,8 @@ The installer installs the pinned Nerd Fonts Symbols Only v3.5.1 font archive af
 
 Use `ghostty-shell profile context` to change the selected profile. It takes effect in the next shell. The `GHOSTTY_STARSHIP_PROFILE` environment variable can override the saved choice. Profiles use repository TOML and do not overwrite `~/.config/starship.toml`; the adapter sets `STARSHIP_CONFIG` only in shells using a selected profile.
 
+Starship must be on `PATH` before Oh My Zsh loads. Put any custom Starship `PATH` setup above `source "$ZSH/oh-my-zsh.sh"`. If it is unavailable at that point, the integration keeps the existing theme for that shell instead of initializing a second prompt later.
+
 `ghostty-shell icons auto|never` selects eza and fzf-tab icon behavior. `auto` lets eza decide based on output/terminal capabilities; `never` disables glyphs. The `portable` profile also disables file icons. Install/configure the `fzf-tab` Oh My Zsh plugin separately if interactive tab completion previews are desired. Follow the [upstream load-order guidance](https://github.com/Aloxaf/fzf-tab#install): after `compinit`, and before plugins that wrap Zsh widgets, such as `zsh-autosuggestions` and `fast-syntax-highlighting`.
 
 ## Commands

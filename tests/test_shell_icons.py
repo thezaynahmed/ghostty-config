@@ -59,7 +59,7 @@ class ShellIconsTest(unittest.TestCase):
         self.assertTrue(configure.configure(zshrc, ROOT))
         first = zshrc.read_text()
         self.assertIn('ZSH_THEME="powerlevel10k/powerlevel10k"', first)
-        self.assertIn('GHOSTTY_STARSHIP_ACTIVE:-0', first)
+        self.assertIn('GHOSTTY_SKIP_P10K_INSTANT:-0', first)
         self.assertIn("ghostty shell instant prompt guard", first)
         self.assertLess(first.index("prompt-select.zsh"), first.index("oh-my-zsh.sh"))
         self.assertIn('alias mine="echo mine"', first)
@@ -73,8 +73,18 @@ class ShellIconsTest(unittest.TestCase):
         zshrc = self.path / ".zshrc"
         zshrc.write_text('if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then\n  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"\nfi\nZSH_THEME="powerlevel10k/powerlevel10k"\nsource "$ZSH/oh-my-zsh.sh"\n')
         configure.configure(zshrc, ROOT)
-        result = self.zsh(f'GHOSTTY_SHELL_STATE_DIR={self.env["GHOSTTY_SHELL_STATE_DIR"]!r}; mkdir -p "$GHOSTTY_SHELL_STATE_DIR"; print context > "$GHOSTTY_SHELL_STATE_DIR/profile"; source {str(zshrc)!r}; print -r -- "$GHOSTTY_STARSHIP_ACTIVE|$ZSH_THEME"')
+        result = self.zsh(f'GHOSTTY_SHELL_STATE_DIR={self.env["GHOSTTY_SHELL_STATE_DIR"]!r}; mkdir -p "$GHOSTTY_SHELL_STATE_DIR"; print context > "$GHOSTTY_SHELL_STATE_DIR/profile"; source {str(zshrc)!r}; print -r -- "$GHOSTTY_SKIP_P10K_INSTANT|$ZSH_THEME"')
         self.assertIn("1|", result.stdout)
+
+    def test_late_starship_path_keeps_existing_theme(self):
+        tools = self.path / "late-tools"
+        tools.mkdir()
+        starship = tools / "starship"
+        starship.write_text('#!/bin/sh\necho "PROMPT=starship"\n')
+        starship.chmod(0o755)
+        self.env['GHOSTTY_STARSHIP_PROFILE'] = 'context'
+        result = self.zsh(f'path=(/usr/bin /bin); ZSH_THEME=p10k; source adapters/zsh/prompt-select.zsh; path+=({str(tools)!r}); PROMPT=original; source adapters/zsh/ade-terminal.zsh; print -r -- "$ZSH_THEME|$PROMPT"')
+        self.assertEqual(result.stdout.strip(), 'p10k|original')
 
     def test_symlink_finds_repo(self):
         link = self.path / "shell helper"

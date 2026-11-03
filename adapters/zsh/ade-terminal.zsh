@@ -65,7 +65,7 @@ if command -v fzf >/dev/null 2>&1 && [[ -f "$_ghostty_fzf_tab" ]]; then
 fi
 
 # A saved profile is an explicit opt-in; otherwise keep the current prompt.
-if [[ "$_ghostty_profile" != off ]] && command -v starship >/dev/null 2>&1; then
+if [[ "$_ghostty_profile" != off && "${_GHOSTTY_STARSHIP_ALLOWED:-1}" == 1 ]] && command -v starship >/dev/null 2>&1; then
   export STARSHIP_CONFIG="$_ghostty_repo_dir/adapters/starship/$_ghostty_profile.toml"
   if [[ -z "${_GHOSTTY_STARSHIP_INITIALIZED:-}" ]]; then
     eval "$(starship init zsh)"
