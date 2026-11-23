@@ -43,7 +43,8 @@ This repository clones straight into `~/.config/ghostty` and pairs **GitHub Mona
 
 Detects **macOS**, **Fedora**, **Ubuntu**, **Debian**, **Pop!_OS**, **Arch**, and **openSUSE**; installs Ghostty + Monaspace v1.400; links `ghostty-theme` and `theme-sync`; and syncs your installed terminals and IDEs.
 
-**2. Install with an AI Agent:** Paste into **Claude Code**, **Cursor**, **Antigravity**, **Codex**, **Windsurf**, or **Superset**:
+**2. Install with an AI Agent or Agent Skill:**
+Install the Agent Skill (`npx skills add thezaynahmed/ghostty-config`, [`skills/ghostty-config/SKILL.md`](skills/ghostty-config/SKILL.md), [`llms.txt`](llms.txt)), or paste into **Claude Code**, **Cursor**, **Antigravity**, **Codex**, **Windsurf**, or **Superset**:
 
 ```text
 Clone https://github.com/thezaynahmed/ghostty-config.git to ~/.config/ghostty, read AGENTS.md, and run ./install.sh --all to configure Ghostty, Monaspace Neon fonts, and my installed terminals and IDEs. Validate with ghostty +validate-config.
@@ -193,7 +194,7 @@ ghostty-shell icons never         # disable file and completion icons
 
 ## Contributing and License
 
-- Maintainer: [`@thezaynahmed`](https://github.com/thezaynahmed)
-- Contributing & Bug Reports: See [`CONTRIBUTING.md`](CONTRIBUTING.md) or open an issue on [GitHub Issues](https://github.com/thezaynahmed/ghostty-config/issues).
-- Independent Project Notice: Gotham Noir is an independent, original open-source color system created by Zain Ahmed and is not affiliated with or endorsed by any studio or publisher.
-- License: [MIT](LICENSE)
+- **Maintainer:** Zain Ahmed ([`@thezaynahmed`](https://github.com/thezaynahmed) | [zainahmed.net](https://zainahmed.net/))
+- **Governance & Community:** [Contributing](CONTRIBUTING.md) | [Code of Conduct](CODE_OF_CONDUCT.md) | [Security Policy](SECURITY.md) | [Review Governance](docs/security-and-review.md) | [GitHub Issues](https://github.com/thezaynahmed/ghostty-config/issues)
+- **Independent Project Notice:** Gotham Noir is an independent, original open-source color system created by Zain Ahmed and is not affiliated with or endorsed by any studio or publisher.
+- **License:** [MIT](LICENSE)
