@@ -21,8 +21,8 @@ Merge protection relies on deterministic checks, never LLM approval:
 
 ## 3. Advisory AI Pull Request Review (CodeRabbit)
 
-- **Repository scope:** When installed, the CodeRabbit GitHub App (`coderabbitai`) is restricted to **Only select repositories** (`thezaynahmed/ghostty-config` and `thezaynahmed/gotham-noir`), never broad "All repositories" access.
-- **Advisory posture:** `.coderabbit.yaml` sets `reviews.request_changes_workflow: false` so CodeRabbit never blocks merges via formal change requests and never replaces deterministic CI.
+- **Repository scope (`Only select repositories`):** The CodeRabbit GitHub App (`coderabbitai`) is installed with access restricted to 4 explicitly selected repositories (public `thezaynahmed/ghostty-config` and `thezaynahmed/gotham-noir` for full OSS advisory reviews, plus private `thezaynahmed/portfolio` and `thezaynahmed/k8s-lecture-notes` under Free-plan PR summaries), never broad "All repositories" access.
+- **Advisory posture:** `.coderabbit.yaml` sets `reviews.request_changes_workflow: false` so CodeRabbit stays strictly advisory, never blocks merges via formal change requests, and never replaces deterministic CI as a merge gate.
 - **Zero cache retention:** `.coderabbit.yaml` sets `reviews.disable_cache: true` so repository code is not cached across runs.
 - **Thread resolution note:** Because ruleset `26415451` requires resolved review threads, inline advisory comments from CodeRabbit must be reviewed and resolved before merging.
 
