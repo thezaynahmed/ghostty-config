@@ -1,0 +1,17 @@
+name: Feature or Adapter Request
+description: Request a new terminal/editor adapter, theme, or shell profile
+labels: ["enhancement"]
+body:
+  - type: input
+    id: target
+    attributes:
+      label: Target terminal, editor, or feature
+      placeholder: "e.g. Helix, Zellij, Fish shell"
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details & config location
+    validations:
+      required: true

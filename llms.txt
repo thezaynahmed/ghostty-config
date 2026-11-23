@@ -1,0 +1,15 @@
+# Ghostty Config: Dyslexia, ADHD & Late-Night Edition
+
+> Ghostty-first terminal ergonomics and universal theme-sync CLI (`ghostty-theme` / `theme-sync`) syncing 22 calibrated themes (including Gotham Noir) and Monaspace Neon typography across 16+ terminals and IDEs on macOS and Linux. Maintained by Zain Ahmed (https://zainahmed.net/).
+
+## Agent Setup & Skills
+- [Agent Skill (SKILL.md)](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/skills/ghostty-config/SKILL.md): Installable Agent Skill (`npx skills add thezaynahmed/ghostty-config`).
+- [AGENTS.md](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/AGENTS.md): Step-by-step installer flags, theme-sync usage, and validation.
+- [Shell Icons & Prompt Docs](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/docs/shell-icons.md): Starship profiles, eza/fzf integration, Linux prerequisites.
+
+## Documentation & Governance
+- [README.md](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/README.md)
+- [CONTRIBUTING.md](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/CONTRIBUTING.md)
+- [SECURITY.md](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/SECURITY.md)
+- [CODE_OF_CONDUCT.md](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/CODE_OF_CONDUCT.md)
+- [Security & Review Governance](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/docs/security-and-review.md)

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a Security Vulnerability
+    url: https://github.com/thezaynahmed/ghostty-config/security/advisories/new
+    about: Privately disclose security issues instead of opening a public issue.
+  - name: Maintainer Website
+    url: https://zainahmed.net/
+    about: Official website of Zain Ahmed (@thezaynahmed).
