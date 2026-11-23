@@ -233,14 +233,17 @@ fi
 
 chmod +x "$TARGET_DIR/bin/ghostty-theme" "$TARGET_DIR/bin/ghostty-shell" "$TARGET_DIR/adapters/macos-terminal/apply-macos-terminal.sh" 2>/dev/null || true
 
-# Link ghostty-theme CLI into ~/.local/bin or /opt/homebrew/bin if writable
+# Link ghostty-theme and universal theme-sync CLI into PATH
 if [[ -d "/opt/homebrew/bin" && -w "/opt/homebrew/bin" ]]; then
   ln -sf "$TARGET_DIR/bin/ghostty-theme" "/opt/homebrew/bin/ghostty-theme"
+  ln -sf "$TARGET_DIR/bin/ghostty-theme" "/opt/homebrew/bin/theme-sync"
 elif [[ -d "/usr/local/bin" && -w "/usr/local/bin" ]]; then
   ln -sf "$TARGET_DIR/bin/ghostty-theme" "/usr/local/bin/ghostty-theme"
+  ln -sf "$TARGET_DIR/bin/ghostty-theme" "/usr/local/bin/theme-sync"
 else
   mkdir -p "$HOME/.local/bin"
   ln -sf "$TARGET_DIR/bin/ghostty-theme" "$HOME/.local/bin/ghostty-theme"
+  ln -sf "$TARGET_DIR/bin/ghostty-theme" "$HOME/.local/bin/theme-sync"
 fi
 
 # The shell helper resolves this symlink back to the repository for future syncs.
@@ -266,7 +269,7 @@ if os.path.exists(p):
         c = f.read()
     # NOTE: Warp's theme field only accepts "dark" or "light" (built-in values).
     # Custom themes (.yaml files in ~/.warp/themes/) must be selected via
-    # Warp UI → Settings → Appearance → Theme — not set here.
+    # Warp UI -> Settings -> Appearance -> Theme - not set here.
     c = re.sub(r"theme\s*=\s*\".*?\"", "theme = \"dark\"", c)
     if "font_family" not in c and "[appearance.text]" in c:
         c = c.replace("[appearance.text]", "[appearance.text]\nfont_family = \"Monaspace Neon\"")

@@ -55,6 +55,27 @@ class ThemeSwitcherTest(unittest.TestCase):
                 self.assertEqual(set(bordered), {78}, f"Border alignment mismatch: {bordered}")
             self.assertIn("theme = Gotham Noir - Year One", cfg.read_text(encoding="utf-8"))
 
+    def test_theme_sync_symlink_works_identically(self) -> None:
+        install_text = (ROOT / "install.sh").read_text(encoding="utf-8")
+        self.assertIn("theme-sync", install_text)
+        with tempfile.TemporaryDirectory() as td:
+            link_path = Path(td) / "theme-sync"
+            link_path.symlink_to(GHOSTTY_THEME)
+            cfg = Path(td) / "config"
+            cfg.write_text("theme = Gotham Noir - Year One\nfont-size = 14.5\n", encoding="utf-8")
+            env = dict(os.environ, GHOSTTY_CONFIG_DIR=str(ROOT), GHOSTTY_CONFIG_PATH=str(cfg))
+
+            cur = subprocess.run([str(link_path), "current"], capture_output=True, text=True, env=env, check=True)
+            self.assertEqual(cur.stdout.strip(), "Gotham Noir - Year One")
+
+            sig = subprocess.run([str(link_path), "--signal"], capture_output=True, text=True, env=env, check=True)
+            self.assertIn("GOTHAM NOIR", sig.stdout)
+            self.assertNotIn("—", sig.stdout)
+
+            hlp = subprocess.run([str(link_path), "--help"], capture_output=True, text=True, env=env, check=True)
+            self.assertIn("theme-sync", hlp.stdout)
+            self.assertNotIn("—", hlp.stdout)
+
     def test_batman_lore_aliases(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             cfg = Path(td) / "config"

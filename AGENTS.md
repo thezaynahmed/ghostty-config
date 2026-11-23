@@ -19,10 +19,12 @@ To configure only specific tools, pass individual flags to `install.sh`:
 - `--windsurf`: Merge terminal settings into Windsurf IDE.
 - `--superset`: Install Superset terminal settings.
 - `--zed`: Merge terminal settings into Zed.
-- `--warp`: Copy all 18 themes to `~/.warp/themes`.
+- `--warp`: Copy all 22 themes to `~/.warp/themes`.
 - `--alacritty`: Copy `alacritty.toml` to `~/.config/alacritty/`.
 - `--wezterm`: Copy `wezterm.lua` to `~/.config/wezterm/`.
 - `--kitty`: Copy `kitty.conf` to `~/.config/kitty/`.
+- `--iterm2`: Install iTerm2 Dynamic Profile (macOS).
+- `--macos-terminal`: Configure macOS Terminal.app profile (macOS).
 - `--tmux`: Append pane dimming and truecolor rules to `~/.tmux.conf`.
 - `--linux-fontconfig`: Install Linux Fontconfig rules to `~/.config/fontconfig/conf.d/`.
 - `--zsh`: Source the steady-cursor Zsh hook in `~/.zshrc`.
@@ -32,24 +34,24 @@ To configure only specific tools, pass individual flags to `install.sh`:
 
 For profile changes, troubleshooting, Linux prerequisites, and sync behavior, see [`docs/shell-icons.md`](docs/shell-icons.md). The shell icon integration keeps its profile selection under `~/.config/ghostty-shell/`; do not commit local selections.
 
-## 2. Theme Switching
+## 2. Theme Switching (`ghostty-theme` / `theme-sync`)
 
-Use the bundled CLI tool to inspect, list, or switch themes across Ghostty and synced terminals/IDEs:
+`install.sh` links both `ghostty-theme` and the universal `theme-sync` alias into `PATH` to inspect, list, or switch themes across Ghostty and synced terminals/IDEs:
 
 ```bash
-~/.config/ghostty/bin/ghostty-theme current
-~/.config/ghostty/bin/ghostty-theme --signal          # WayneTech Batcomputer diagnostic
-~/.config/ghostty/bin/ghostty-theme --list
-~/.config/ghostty/bin/ghostty-theme batman --all      # Gotham Noir - Year One
-~/.config/ghostty/bin/ghostty-theme batcomputer --all # Gotham Noir - Batcomputer
-~/.config/ghostty/bin/ghostty-theme arkham --all      # Gotham Noir - Arkham Slate
-~/.config/ghostty/bin/ghostty-theme vengeance --all   # Gotham Noir - Vengeance
-~/.config/ghostty/bin/ghostty-theme "Gruvbox Material Dark Medium"
+theme-sync current                # Read-only active theme check
+theme-sync --signal               # Read-only Batcomputer Neofetch ANSI diagnostic TUI (alias: --fetch)
+theme-sync --list                 # List all available themes
+theme-sync year-one --all         # Gotham Noir - Year One across all synced tools
+theme-sync batcomputer --all      # Gotham Noir - Batcomputer
+theme-sync arkham --all           # Gotham Noir - Arkham Slate
+theme-sync vengeance --all        # Gotham Noir - Vengeance
+ghostty-theme "Gruvbox Material Dark Medium"
 ```
 
 ## 3. Validation
 
-Verify the Ghostty configuration with this command:
+Verify the Ghostty configuration with:
 
 ```bash
 ghostty +validate-config
