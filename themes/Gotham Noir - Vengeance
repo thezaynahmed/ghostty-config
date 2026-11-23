@@ -1,0 +1,24 @@
+# Gotham Noir - Vengeance — VENGEANCE // ICEBERG-2022
+# Iceberg Lounge red emergency flares slicing through rain-slicked Gotham obsidian.
+palette = 0=#151417
+palette = 1=#ef6c74
+palette = 2=#6ec798
+palette = 3=#e8be54
+palette = 4=#7baee6
+palette = 5=#be9ae6
+palette = 6=#6fc2ca
+palette = 7=#ddd8d5
+palette = 8=#918994
+palette = 9=#f68e94
+palette = 10=#87d7ad
+palette = 11=#f2ce74
+palette = 12=#9ac2ee
+palette = 13=#cfb2ee
+palette = 14=#8ad2d9
+palette = 15=#f0ecea
+background = #151417
+foreground = #ddd8d5
+cursor-color = #e5535c
+cursor-text = #f8f4f5
+selection-background = #3a2c33
+selection-foreground = #f0ecea

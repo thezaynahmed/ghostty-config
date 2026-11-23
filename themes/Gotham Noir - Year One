@@ -1,0 +1,24 @@
+# Gotham Noir - Year One — YEAR-ONE // DETECTIVE-27
+# Park Row Crime Alley shadows lit by Commissioner Gordon's rooftop GCPD Bat-Signal.
+palette = 0=#15171a
+palette = 1=#e86a74
+palette = 2=#63c794
+palette = 3=#f0c946
+palette = 4=#74aeeb
+palette = 5=#b695e8
+palette = 6=#68c5ce
+palette = 7=#d8d6cf
+palette = 8=#878d96
+palette = 9=#f28b94
+palette = 10=#7ed8a9
+palette = 11=#f7d96d
+palette = 12=#93c2f2
+palette = 13=#c8aef0
+palette = 14=#84d6de
+palette = 15=#eceae4
+background = #15171a
+foreground = #d8d6cf
+cursor-color = #f0c946
+cursor-text = #111316
+selection-background = #323a46
+selection-foreground = #eceae4

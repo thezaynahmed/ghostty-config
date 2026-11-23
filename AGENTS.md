@@ -34,10 +34,16 @@ For profile changes, troubleshooting, Linux prerequisites, and sync behavior, se
 
 ## 2. Theme Switching
 
-Use the bundled CLI tool to list or switch themes:
+Use the bundled CLI tool to inspect, list, or switch themes across Ghostty and synced terminals/IDEs:
 
 ```bash
+~/.config/ghostty/bin/ghostty-theme current
+~/.config/ghostty/bin/ghostty-theme --signal          # WayneTech Batcomputer diagnostic
 ~/.config/ghostty/bin/ghostty-theme --list
+~/.config/ghostty/bin/ghostty-theme batman --all      # Gotham Noir - Year One
+~/.config/ghostty/bin/ghostty-theme batcomputer --all # Gotham Noir - Batcomputer
+~/.config/ghostty/bin/ghostty-theme arkham --all      # Gotham Noir - Arkham Slate
+~/.config/ghostty/bin/ghostty-theme vengeance --all   # Gotham Noir - Vengeance
 ~/.config/ghostty/bin/ghostty-theme "Gruvbox Material Dark Medium"
 ```
 

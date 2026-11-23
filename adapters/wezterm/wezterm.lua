@@ -29,14 +29,14 @@ config.inactive_pane_hsb = {
 }
 
 config.colors = {
-  foreground = '#d4be98',
-  background = '#282828',
-  cursor_bg = '#d4be98',
-  cursor_fg = '#282828',
-  selection_bg = '#45403d',
-  selection_fg = '#d4be98',
-  ansi = { '#282828', '#ea6962', '#a9b665', '#d8a657', '#7daea3', '#d3869b', '#89b482', '#d4be98' },
-  brights = { '#7c6f64', '#ea6962', '#a9b665', '#d8a657', '#7daea3', '#d3869b', '#89b482', '#ddc7a1' },
+  foreground = '#d8d6cf',
+  background = '#15171a',
+  cursor_bg = '#f0c946',
+  cursor_fg = '#111316',
+  selection_bg = '#323a46',
+  selection_fg = '#eceae4',
+  ansi = { '#15171a', '#e86a74', '#63c794', '#f0c946', '#74aeeb', '#b695e8', '#68c5ce', '#d8d6cf' },
+  brights = { '#878d96', '#f28b94', '#7ed8a9', '#f7d96d', '#93c2f2', '#c8aef0', '#84d6de', '#eceae4' },
 }
 
 return config

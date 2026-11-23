@@ -150,7 +150,7 @@ class ShellIconsTest(unittest.TestCase):
     @unittest.skipUnless(shutil.which("starship"), "Starship rendering is optional locally")
     def test_powerline_profile_and_rendering(self):
         self.cli('profile', 'powerline', check=True)
-        selected = self.zsh('ZSH_THEME=previous; source adapters/zsh/prompt-select.zsh; source adapters/zsh/ade-terminal.zsh; print -r -- "$ZSH_THEME|$STARSHIP_CONFIG|$_GHOSTTY_STARSHIP_INITIALIZED"')
+        selected = self.zsh('TERM_PROGRAM=ghostty; ZSH_THEME=previous; source adapters/zsh/prompt-select.zsh; source adapters/zsh/ade-terminal.zsh; print -r -- "$ZSH_THEME|$STARSHIP_CONFIG|$_GHOSTTY_STARSHIP_INITIALIZED"')
         self.assertIn('|'+str(ROOT/'adapters/starship/powerline.toml')+'|1', selected.stdout)
         repo = self.path / 'project'
         repo.mkdir()
@@ -199,6 +199,19 @@ class ShellIconsTest(unittest.TestCase):
                                        text=True, capture_output=True, check=True)
                 self.assertIn("prod-demo", right.stdout)
                 self.assertIn("apps", right.stdout)
+
+    @unittest.skipUnless(shutil.which("starship"), "Starship rendering is optional locally")
+    def test_non_ghostty_falls_back_to_portable(self):
+        self.cli("profile", "powerline", check=True)
+        for term_program in ("", "Antigravity"):
+            selected = self.zsh(
+                f'TERM_PROGRAM={term_program!r}; ZSH_THEME=previous; '
+                'source adapters/zsh/prompt-select.zsh; source adapters/zsh/ade-terminal.zsh; '
+                'print -r -- "$ZSH_THEME|$STARSHIP_CONFIG|$_GHOSTTY_STARSHIP_INITIALIZED|${aliases[ls]:-}"'
+            )
+            self.assertIn("|" + str(ROOT / "adapters/starship/portable.toml") + "|1|", selected.stdout)
+            if shutil.which("eza"):
+                self.assertIn("--icons=never", selected.stdout)
 
 
 if __name__ == "__main__":

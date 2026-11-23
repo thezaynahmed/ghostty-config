@@ -27,12 +27,12 @@ jobs:
           echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
       - name: Check shell syntax
         run: |
-          for script in install.sh bin/ghostty-shell; do bash -n "$script"; done
+          for script in install.sh bin/ghostty-shell bin/ghostty-theme adapters/macos-terminal/apply-macos-terminal.sh; do bash -n "$script"; done
           for script in adapters/zsh/*.zsh; do zsh -n "$script"; done
-          python3 -m py_compile scripts/configure-zsh.py tests/test_shell_icons.py
-      - name: Check profile TOML
-        run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path("adapters/starship").glob("*.toml")]'
-      - name: Run shell icon tests
+          python3 -m py_compile scripts/configure-zsh.py tests/test_shell_icons.py tests/test_theme_switcher.py
+      - name: Check TOML configs
+        run: python3 -c 'import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in [*pathlib.Path("adapters/starship").glob("*.toml"), pathlib.Path("adapters/alacritty/alacritty.toml")]]'
+      - name: Run shell & theme test suite
         env:
           STARSHIP_CACHE: ${{ runner.temp }}/starship-cache
         run: python3 -m unittest discover -s tests -v

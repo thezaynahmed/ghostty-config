@@ -5,6 +5,11 @@ typeset _ghostty_profile_file="${GHOSTTY_SHELL_STATE_DIR:-${XDG_CONFIG_HOME:-$HO
 if [[ -z "$_ghostty_selected" && -f "$_ghostty_profile_file" ]]; then
   IFS= read -r _ghostty_selected < "$_ghostty_profile_file"
 fi
+if [[ "${TERM_PROGRAM:-}" != ghostty ]]; then
+  case "$_ghostty_selected" in
+    minimal|context|powerline) _ghostty_selected=portable ;;
+  esac
+fi
 if command -v starship >/dev/null 2>&1; then
   case "$_ghostty_selected" in
     minimal|context|powerline|portable) ZSH_THEME=''; _GHOSTTY_STARSHIP_ALLOWED=1 ;;

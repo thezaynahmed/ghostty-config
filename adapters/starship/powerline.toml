@@ -7,16 +7,17 @@ format = '[╭─](muted)$os$directory($git_branch$git_status[](green))$fill$
 [palettes.ribbon]
 # Standard ANSI slots follow the terminal's active theme; no RGB colors are fixed.
 blue = '4'
-purple = '5'
+yellow = '3'
 green = '2'
-pink = '13'
+aqua = '6'
+sand = '7'
 ink = '0'
 muted = '8'
 danger = '1'
 
 [os]
 disabled = false
-format = '[ $symbol ](fg:ink bg:blue)[](fg:blue bg:purple)'
+format = '[ $symbol ](fg:ink bg:blue)[](fg:blue bg:yellow)'
 
 [os.symbols]
 Macos = ''
@@ -24,8 +25,8 @@ Linux = ''
 Windows = ''
 
 [directory]
-format = '[  $path$read_only ]($style)[](purple)'
-style = 'fg:ink bg:purple'
+format = '[  $path$read_only ]($style)[](yellow)'
+style = 'fg:ink bg:yellow'
 read_only = ' '
 home_symbol = '~'
 truncation_length = 3
@@ -56,7 +57,7 @@ format = '[ $duration ](yellow)'
 format = ' $symbol '
 success_symbol = '[✔](bold green)'
 error_symbol = '[✘](bold danger)'
-vimcmd_symbol = '[❮](bold purple)'
+vimcmd_symbol = '[❮](bold yellow)'
 
 [status]
 disabled = false
@@ -64,15 +65,15 @@ format = '[exit:$status ](bold danger)'
 
 [username]
 show_always = true
-format = '[](pink)[ $user  ]($style)'
-style_user = 'fg:ink bg:pink'
-style_root = 'bold fg:ink bg:pink'
+format = '[](aqua)[ $user  ]($style)'
+style_user = 'fg:ink bg:aqua'
+style_root = 'bold fg:ink bg:aqua'
 
 [hostname]
 ssh_only = true
-format = '[@$hostname ](fg:ink bg:pink)'
+format = '[@$hostname ](fg:ink bg:aqua)'
 
 [time]
 disabled = false
 time_format = '%I:%M:%S %p'
-format = '[](fg:blue bg:pink)[ $time  ](fg:ink bg:blue)'
+format = '[](fg:sand bg:aqua)[ $time  ](fg:ink bg:sand)'
