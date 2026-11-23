@@ -1,6 +1,6 @@
 # Ghostty Config: Dyslexia, ADHD & Late-Night Edition
 
-> Ghostty-first terminal ergonomics and universal theme-sync CLI (`ghostty-theme` / `theme-sync`) syncing 22 calibrated themes (including Gotham Noir) and Monaspace Neon typography across 16+ terminals and IDEs on macOS and Linux. Maintained by Zain Ahmed (https://zainahmed.net/).
+> Ghostty-first terminal ergonomics and universal theme-sync CLI (`ghostty-theme` / `theme-sync`) syncing 22 calibrated themes (including Gotham Noir at https://gothamnoir.zainahmed.net) and Monaspace Neon typography across 16+ terminals and IDEs on macOS and Linux. Maintained by Zain Ahmed (https://zainahmed.net/).
 
 ## Agent Setup & Skills
 - [Agent Skill (SKILL.md)](https://raw.githubusercontent.com/thezaynahmed/ghostty-config/main/skills/ghostty-config/SKILL.md): Installable Agent Skill (`npx skills add thezaynahmed/ghostty-config`).
