@@ -21,29 +21,29 @@ offset = { x = 1, y = 3 }
 style = { shape = "Block", blinking = "Never" }
 
 [colors.primary]
-background = "#282828"
-foreground = "#d4be98"
+background = "#15171a"
+foreground = "#d8d6cf"
 
 [colors.cursor]
-text = "#282828"
-cursor = "#d4be98"
+text = "#111316"
+cursor = "#f0c946"
 
 [colors.normal]
-black   = "#282828"
-red     = "#ea6962"
-green   = "#a9b665"
-yellow  = "#d8a657"
-blue    = "#7daea3"
-magenta = "#d3869b"
-cyan    = "#89b482"
-white   = "#d4be98"
+black   = "#15171a"
+red     = "#e86a74"
+green   = "#63c794"
+yellow  = "#f0c946"
+blue    = "#74aeeb"
+magenta = "#b695e8"
+cyan    = "#68c5ce"
+white   = "#d8d6cf"
 
 [colors.bright]
-black   = "#7c6f64"
-red     = "#ea6962"
-green   = "#a9b665"
-yellow  = "#d8a657"
-blue    = "#7daea3"
-magenta = "#d3869b"
-cyan    = "#89b482"
-white   = "#ddc7a1"
+black   = "#878d96"
+red     = "#f28b94"
+green   = "#7ed8a9"
+yellow  = "#f7d96d"
+blue    = "#93c2f2"
+magenta = "#c8aef0"
+cyan    = "#84d6de"
+white   = "#eceae4"

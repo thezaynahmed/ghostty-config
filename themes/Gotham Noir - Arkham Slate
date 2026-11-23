@@ -1,0 +1,24 @@
+# Gotham Noir - Arkham Slate — ARKHAM // DETECTIVE-MODE
+# Weathered Arkham Island masonry tuned for effortless late-night forensic scans without eye strain.
+palette = 0=#1d1f21
+palette = 1=#e37370
+palette = 2=#88c082
+palette = 3=#e6c15a
+palette = 4=#80b0dc
+palette = 5=#bc9cd9
+palette = 6=#74bfbd
+palette = 7=#dad5c7
+palette = 8=#929690
+palette = 9=#ec918f
+palette = 10=#a0cfa0
+palette = 11=#eed27e
+palette = 12=#9dc3e6
+palette = 13=#ceb4e5
+palette = 14=#92d1cf
+palette = 15=#ece7da
+background = #1d1f21
+foreground = #dad5c7
+cursor-color = #e6c15a
+cursor-text = #16181a
+selection-background = #373e47
+selection-foreground = #ece7da

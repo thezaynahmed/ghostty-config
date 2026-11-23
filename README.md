@@ -5,7 +5,7 @@
 # Ghostty Config: Dyslexia, ADHD & Late-Night Edition
 
 [![MIT License](https://img.shields.io/badge/license-MIT-1d2021?style=flat-square&labelColor=141617&color=d8a657)](LICENSE)
-[![18 Themes](https://img.shields.io/badge/themes-18_calibrated-1d2021?style=flat-square&labelColor=141617&color=a9b665)](#themes-18)
+[![22 Themes](https://img.shields.io/badge/themes-22_calibrated-1d2021?style=flat-square&labelColor=141617&color=a9b665)](#themes-22)
 [![16+ Targets](https://img.shields.io/badge/targets-Ghostty_%7C_Linux_%7C_macOS_%7C_16_IDEs-1d2021?style=flat-square&labelColor=141617&color=7daea3)](#supported-terminals-and-editors)
 
 Most terminal configs stop at font and theme, which will not fix color haloing, letter crowding, or split-pane distraction. This open-source configuration fixes all three on macOS and Linux.
@@ -51,9 +51,11 @@ cd ~/.config/ghostty
 
 ```bash
 ghostty-theme --list
-ghostty-theme batman
-ghostty-theme ef-dream
-ghostty-theme kanagawa-wave
+ghostty-theme batman        # Gotham Noir - Year One (aliases: year-one, detective-27, 89)
+ghostty-theme batcomputer   # Gotham Noir - Batcomputer (aliases: oracle, batcave, obsidian)
+ghostty-theme arkham        # Gotham Noir - Arkham Slate (aliases: detective-mode, narrows)
+ghostty-theme vengeance     # Gotham Noir - Vengeance (aliases: red-hood, phantasm, 2022)
+ghostty-theme --signal      # Read-only WayneTech Batcomputer ANSI diagnostic card
 ghostty-theme gruvbox
 ```
 
@@ -81,7 +83,7 @@ The selection is stored in `~/.config/ghostty-shell/`, outside the repository. O
 
 | Setting | Value | Purpose |
 | :--- | :--- | :--- |
-| `theme` | `Gruvbox Material Dark Medium` | Warm `#282828` background and `#d4be98` sand text stop glare at night. |
+| `theme` | `Gotham Noir - Year One` | Matte `#15171a` Kevlar canvas and `#d8d6cf` text stop glare (`Gruvbox Material Dark Medium` also bundled). |
 | `font-family` | `Monaspace Neon` + `Radon` (`14.5pt`) | Neon renders clean code, while Radon marks italic comments in handwriting style. |
 | `font-feature` | `+calt, +ss01..03, +zero, +cv10` | Texture healing widens dense letters (`m`, `w`) next to narrow letters (`i`, `l`). |
 | `adjust-cell-height` | `20%` (`+4%` width) | Adds vertical and horizontal breathing room so logs do not blur together. |
@@ -94,30 +96,46 @@ The selection is stored in `~/.config/ghostty-shell/`, outside the repository. O
 
 ---
 
-## Themes (18)
+## Themes (22)
 
-**15 themes ship built into Ghostty**, and **3 custom or alias files** live in [`themes/`](themes/):
+**15 themes ship built into Ghostty**, and **7 custom or calibrated files** live in [`themes/`](themes/) (including the 4 calibrated **Gotham Noir** Batman-inspired dark variants from [`thezaynahmed/gotham-noir`](https://github.com/thezaynahmed/gotham-noir)):
 
 | # | Theme | Command | Source | Background | Foreground |
 | :- | :--- | :--- | :--- | :--- | :--- |
-| 1 | **`Gruvbox Material Dark Medium`** | `ghostty-theme gruvbox` | Bundled Default | `#282828` | `#d4be98`. |
-| 2 | **`Gruvbox Material Dark`** | `ghostty-theme gruvbox-dark` | Ghostty Builtin | `#282828` | `#d4be98`. |
-| 3 | **`Batman`** | `ghostty-theme batman` | Ghostty Builtin | `#1b1d1e` | `#c6c5bf`. |
-| 4 | **`Night Owl`** | `ghostty-theme night-owl` | Ghostty Builtin | `#011627` | `#d6deeb`. |
-| 5 | **`Modus Vivendi Tinted`** | `ghostty-theme modus` | Ghostty Builtin | `#0d0e1c` | `#ffffff`. |
-| 6 | **`Ef-Dream`** | `ghostty-theme ef-dream` | Bundled Custom | `#232025` | `#efd5c5`. |
-| 7 | **`Ef-Bio`** | `ghostty-theme ef-bio` | Bundled Custom | `#111111` | `#cfdfd5`. |
-| 8 | **`Kanagawa Wave`** | `ghostty-theme kanagawa` | Ghostty Builtin | `#1f1f28` | `#dcd7ba`. |
-| 9 | **`Kanagawa Dragon`** | `ghostty-theme dragon` | Ghostty Builtin | `#181616` | `#c5c9c5`. |
-| 10 | **`Catppuccin Mocha`** | `ghostty-theme mocha` | Ghostty Builtin | `#1e1e2e` | `#cdd6f4`. |
-| 11 | **`TokyoNight Storm`** | `ghostty-theme tokyo` | Ghostty Builtin | `#24283b` | `#c0caf5`. |
-| 12 | **`Rose Pine`** (`Rosé Pine`) | `ghostty-theme rose-pine` | Ghostty Builtin | `#191724` | `#e0def4`. |
-| 13 | **`Rose Pine Moon`** | `ghostty-theme moon` | Ghostty Builtin | `#232136` | `#e0def4`. |
-| 14 | **`Everforest Dark Hard`** | `ghostty-theme everforest` | Ghostty Builtin | `#1e2326` | `#d3c6aa`. |
-| 15 | **`Dracula`** | `ghostty-theme dracula` | Ghostty Builtin | `#282a36` | `#f8f8f2`. |
-| 16 | **`Dracula+`** | `ghostty-theme dracula+` | Ghostty Builtin | `#212121` | `#f8f8f2`. |
-| 17 | **`Ayu Mirage`** | `ghostty-theme ayu` | Ghostty Builtin | `#1f2430` | `#cccac2`. |
-| 18 | **`Ubuntu`** | `ghostty-theme ubuntu` | Ghostty Builtin | `#300a24` | `#eeeeec`. |
+| 1 | **`Gotham Noir - Year One`** | `ghostty-theme batman` | Bundled Custom | `#15171a` | `#d8d6cf` |
+| 2 | **`Gotham Noir - Batcomputer`** | `ghostty-theme batcomputer` | Bundled Custom | `#101215` | `#dce0e5` |
+| 3 | **`Gotham Noir - Arkham Slate`** | `ghostty-theme arkham` | Bundled Custom | `#1d1f21` | `#dad5c7` |
+| 4 | **`Gotham Noir - Vengeance`** | `ghostty-theme vengeance` | Bundled Custom | `#151417` | `#ddd8d5` |
+| 5 | **`Gruvbox Material Dark Medium`** | `ghostty-theme gruvbox-medium` | Bundled Custom | `#282828` | `#d4be98` |
+| 6 | **`Gruvbox Material Dark`** | `ghostty-theme gruvbox` | Ghostty Builtin | `#282828` | `#d4be98` |
+| 7 | **`Night Owl`** | `ghostty-theme night-owl` | Ghostty Builtin | `#011627` | `#d6deeb` |
+| 8 | **`Modus Vivendi Tinted`** | `ghostty-theme modus` | Ghostty Builtin | `#0d0e1c` | `#ffffff` |
+| 9 | **`Ef-Dream`** | `ghostty-theme ef-dream` | Bundled Custom | `#232025` | `#efd5c5` |
+| 10 | **`Ef-Bio`** | `ghostty-theme ef-bio` | Bundled Custom | `#111111` | `#cfdfd5` |
+| 11 | **`Kanagawa Wave`** | `ghostty-theme kanagawa` | Ghostty Builtin | `#1f1f28` | `#dcd7ba` |
+| 12 | **`Kanagawa Dragon`** | `ghostty-theme dragon` | Ghostty Builtin | `#181616` | `#c5c9c5` |
+| 13 | **`Catppuccin Mocha`** | `ghostty-theme mocha` | Ghostty Builtin | `#1e1e2e` | `#cdd6f4` |
+| 14 | **`TokyoNight Storm`** | `ghostty-theme tokyo` | Ghostty Builtin | `#24283b` | `#c0caf5` |
+| 15 | **`Rose Pine`** (`Rosé Pine`) | `ghostty-theme rose-pine` | Ghostty Builtin | `#191724` | `#e0def4` |
+| 16 | **`Rose Pine Moon`** | `ghostty-theme moon` | Ghostty Builtin | `#232136` | `#e0def4` |
+| 17 | **`Everforest Dark Hard`** | `ghostty-theme everforest` | Ghostty Builtin | `#1e2326` | `#d3c6aa` |
+| 18 | **`Dracula`** | `ghostty-theme dracula` | Ghostty Builtin | `#282a36` | `#f8f8f2` |
+| 19 | **`Dracula+`** | `ghostty-theme dracula+` | Ghostty Builtin | `#212121` | `#f8f8f2` |
+| 20 | **`Ayu Mirage`** | `ghostty-theme ayu` | Ghostty Builtin | `#1f2430` | `#cccac2` |
+| 21 | **`Ubuntu`** | `ghostty-theme ubuntu` | Ghostty Builtin | `#300a24` | `#eeeeec` |
+| 22 | **`Matrix II Higher Contrast`** | `ghostty-theme matrix` | Bundled Custom | `#0f1512` | `#c7f0d2` |
+
+*(Legacy Ghostty built-in `Batman` (`#1b1d1e` / `#6f6f6f`) remains available via `ghostty-theme batman-legacy`.)*
+
+---
+
+## Font Presets (Dyslexia & Readability)
+
+- **Default**: `Monaspace Neon` + `Monaspace Radon` italics (`+calt +ss01..03 +zero +cv10`).
+- **Monaspace Argon**: Wider humanist proportions with Texture Healing (`font-family = "Monaspace Argon"`).
+- **Intel One Mono**: Designed by Frere-Jones Type to maximize `b/d/p/q` and `1/l/I` distinction.
+- **Atkinson Hyperlegible Mono**: Braille Institute's 2025 monospaced release (SIL OFL) for maximum homoglyph legibility.
+- **Commit Mono**: Clean neutral geometry with customizable alternates.
 
 ---
 

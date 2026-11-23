@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Apply Gruvbox Material Dark + MesloLGS NF to native macOS Terminal.app
+# Apply terminal profile + Monaspace/MesloLGS to native macOS Terminal.app
 # ==============================================================================
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-THEME_FILE="${SCRIPT_DIR}/Gruvbox Material Dark.terminal"
-PROFILE_NAME="Gruvbox Material Dark"
+PROFILE_NAME="${1:-Gruvbox Material Dark}"
+THEME_FILE="${SCRIPT_DIR}/${PROFILE_NAME}.terminal"
+
+if [[ ! -f "${THEME_FILE}" ]]; then
+    echo "Error: Terminal profile not found at ${THEME_FILE}" >&2
+    exit 1
+fi
 
 echo "==> Importing '${PROFILE_NAME}' into macOS Terminal.app..."
 open "${THEME_FILE}"
@@ -28,4 +33,4 @@ EOF
 defaults write com.apple.Terminal "Default Window Settings" -string "${PROFILE_NAME}"
 defaults write com.apple.Terminal "Startup Window Settings" -string "${PROFILE_NAME}"
 
-echo "==> macOS Terminal.app successfully configured with Gruvbox Material Dark + MesloLGS NF."
+echo "==> macOS Terminal.app successfully configured with ${PROFILE_NAME}."

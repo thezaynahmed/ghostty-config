@@ -1,17 +1,31 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# ghostty-theme - Instant Ghostty theme switcher with zero restart (SIGUSR2)
+# ghostty-theme - Universal terminal theme switcher
+# Syncs Ghostty + VS Code + Cursor + Antigravity + Antigravity IDE + Windsurf
+#       + Zed + Warp + Alacritty + Kitty + WezTerm + tmux
 # ==============================================================================
 set -euo pipefail
 
 REPO_DIR="${GHOSTTY_CONFIG_DIR:-$HOME/.config/ghostty}"
 CONFIG_FILE="${GHOSTTY_CONFIG_PATH:-$REPO_DIR/config}"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  APP_SUPPORT="$HOME/Library/Application Support"
+else
+  APP_SUPPORT="${XDG_CONFIG_HOME:-$HOME/.config}"
+fi
+GHOSTTY_BUILTIN="/Applications/Ghostty.app/Contents/Resources/ghostty/themes"
+
+SYNC_ALL=0
 
 resolve_theme() {
   local input
   input="$(echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[-_]/ /g' | xargs)"
   case "$input" in
-    batman|gotham) echo "Batman" ;;
+    batman|gotham|gotham\ noir|year\ one|gotham\ noir\ year\ one|detective\ 27|89|signal) echo "Gotham Noir - Year One" ;;
+    batcomputer|obsidian|batcave|oracle|brother\ eye|lucius|wayne\ tech|batman\ obsidian|gotham\ noir\ batcomputer) echo "Gotham Noir - Batcomputer" ;;
+    arkham|arkham\ slate|slate|detective\ mode|narrows|asylum|batman\ slate|gotham\ noir\ arkham\ slate) echo "Gotham Noir - Arkham Slate" ;;
+    vengeance|crimson|2022|red\ hood|phantasm|iceberg|batman\ crimson|gotham\ noir\ vengeance) echo "Gotham Noir - Vengeance" ;;
+    batman\ legacy|batman\ builtin) echo "Batman" ;;
     ef\ dream|efdream) echo "Ef-Dream" ;;
     ef\ bio|efbio) echo "Ef-Bio" ;;
     gruvbox|gruvbox\ dark|gruvbox\ material|gruvbox\ material\ dark) echo "Gruvbox Material Dark" ;;
@@ -31,7 +45,6 @@ resolve_theme() {
     ayu|ayu\ mirage|mirage) echo "Ayu Mirage" ;;
     ubuntu) echo "Ubuntu" ;;
     *)
-      # Fallback: fuzzy match against available ghostty themes
       local match
       match="$(ghostty +list-themes 2>/dev/null | sed -E 's/ \((resources|user)\)//' | grep -i "^${input}$" | head -n 1 || true)"
       if [[ -z "$match" ]]; then
@@ -46,44 +59,501 @@ resolve_theme() {
   esac
 }
 
-list_themes() {
+show_help() {
   cat << 'EOF'
-Ghostty Theme Switcher
-
-Popular Shortcuts:
-  ghostty-theme gruvbox         -> Gruvbox Material Dark (Default)
-  ghostty-theme batman          -> Batman
-  ghostty-theme ef-dream        -> Ef-Dream
-  ghostty-theme kanagawa-wave   -> Kanagawa Wave
-  ghostty-theme matrix          -> Matrix II Higher Contrast
-  ghostty-theme catppuccin      -> Catppuccin Mocha
-  ghostty-theme tokyo-night     -> TokyoNight Storm
-  ghostty-theme rose-pine       -> Rose Pine
-  ghostty-theme dracula         -> Dracula
+Ghostty Theme Switcher — Universal Terminal Theming
 
 Usage:
-  ghostty-theme <theme-name>    Switch theme live (no terminal restart needed)
-  ghostty-theme --list          List all available themes
-  ghostty-theme sync --all      Sync config across all installed editors/tools
+  ghostty-theme <theme>           Switch Ghostty only (hot-reload, no restart)
+  ghostty-theme <theme> --all     Switch ALL terminals: Ghostty + VS Code +
+                                  Cursor + Antigravity + Antigravity IDE +
+                                  Windsurf + Zed + Warp + Alacritty + Kitty +
+                                  WezTerm + tmux
+  ghostty-theme current           Print current active Ghostty theme (read-only)
+  ghostty-theme --signal          Batcomputer Diagnostic + 16 ANSI Swatches (read-only)
+  ghostty-theme --list            List all available Ghostty themes
+  ghostty-theme sync --all        Sync repository install across tools
+
+Batman Lore Shortcuts (Gotham Noir):
+  ghostty-theme batman            → Gotham Noir - Year One (aliases: year-one, detective-27, 89)
+  ghostty-theme batcomputer       → Gotham Noir - Batcomputer (aliases: oracle, batcave, obsidian)
+  ghostty-theme arkham            → Gotham Noir - Arkham Slate (aliases: detective-mode, narrows, slate)
+  ghostty-theme vengeance         → Gotham Noir - Vengeance (aliases: red-hood, phantasm, 2022, crimson)
+
+Other Shortcuts:
+  ghostty-theme gruvbox           → Gruvbox Material Dark
+  ghostty-theme gruvbox-medium    → Gruvbox Material Dark Medium
+  ghostty-theme ef-dream          → Ef-Dream
+  ghostty-theme kanagawa-wave     → Kanagawa Wave
+  ghostty-theme catppuccin        → Catppuccin Mocha
+  ghostty-theme tokyo-night       → TokyoNight Storm
+
+Examples:
+  ghostty-theme batman --all      # Switch everything to Gotham Noir - Year One
+  ghostty-theme batcomputer --all # Switch everything to Gotham Noir - Batcomputer
+  ghostty-theme --signal          # WayneTech Batcomputer ANSI diagnostic card
 EOF
 }
 
-if [[ $# -eq 0 || "$1" == "--help" || "$1" == "-h" ]]; then
-  list_themes
+print_current_theme() {
+  if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "Error: Ghostty config not found at $CONFIG_FILE" >&2
+    exit 1
+  fi
+  python3 - "$CONFIG_FILE" << 'CUR_PY'
+import re, sys
+with open(sys.argv[1], "r", encoding="utf-8") as f:
+    for line in f:
+        m = re.match(r"^\s*theme\s*=\s*(.+?)\s*$", line)
+        if m:
+            print(m.group(1))
+            sys.exit(0)
+print("(unset)")
+CUR_PY
+}
+
+print_bat_signal() {
+  local current_theme theme_file colors_json
+  current_theme="$(print_current_theme)"
+  theme_file="$(find_theme_file "$current_theme" 2>/dev/null || true)"
+  if [[ -n "$theme_file" ]]; then
+    colors_json="$(parse_ghostty_theme "$theme_file")"
+  else
+    colors_json='{}'
+  fi
+  python3 - "$current_theme" "$colors_json" << 'SIG_PY'
+import json, sys
+
+theme = sys.argv[1]
+c = json.loads(sys.argv[2]) if sys.argv[2] else {}
+lore_map = {
+    "Gotham Noir - Year One": ("YEAR-ONE // DETECTIVE-27", "Nomex Kevlar + GCPD Signal Gold — Park Row (1939/1987)"),
+    "Gotham Noir - Batcomputer": ("BATCAVE // SUB-LEVEL-04", "Lucius Fox Applied Sciences + Oracle Clocktower Emerald"),
+    "Gotham Noir - Arkham Slate": ("ARKHAM // DETECTIVE-MODE", "Arkham Island Stonework — 3 AM Zero-Glare Forensic HUD"),
+    "Gotham Noir - Vengeance": ("VENGEANCE // ICEBERG-2022", "Iceberg Lounge Flare + Red Hood Tactical Crimson"),
+}
+proto, lore_desc = lore_map.get(theme, ("WAYNE-TECH // DIAGNOSTIC", "Custom / Built-in Ghostty Terminal Palette"))
+
+def fg_hex(h, text):
+    h = h.lstrip("#")
+    if len(h) != 6:
+        return text
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
+
+def swatch(h, label):
+    h = h.lstrip("#")
+    if len(h) != 6:
+        return label
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return f"\033[48;2;{r};{g};{b}m   \033[0m {label}(#{h})"
+
+gold = c.get("ansiYellow", "#f0c946")
+muted = c.get("ansiBrightBlack", "#878d96")
+print(fg_hex(gold, "=================================================================="))
+print(fg_hex(gold, "  WAYNE ENTERPRISES // BATCOMPUTER DIAGNOSTIC  [DETECTIVE #27]"))
+print(fg_hex(gold, "=================================================================="))
+print(f"  Active Theme : {theme}")
+print(f"  Protocol     : {fg_hex(gold, proto)}")
+print(f"  Archive Note : {fg_hex(muted, lore_desc)}")
+if c:
+    print(f"  Canvas / FG  : {c.get('background')} / {c.get('foreground')}  |  Cursor: {c.get('cursor_color')}")
+    norm = [swatch(c.get(f"ansi{k}", "#000000"), k[:3]) for k in ("Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White")]
+    bright = [swatch(c.get(f"ansiBright{k}", "#000000"), f"B.{k[:3]}") for k in ("Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White")]
+    print("  Normal ANSI  : " + "  ".join(norm[:4]))
+    print("                 " + "  ".join(norm[4:]))
+    print("  Bright ANSI  : " + "  ".join(bright[:4]))
+    print("                 " + "  ".join(bright[4:]))
+print(fg_hex(muted, "  \"Without fear, life has no meaning.\" — Gotham, Year One"))
+SIG_PY
+}
+
+find_theme_file() {
+  local theme="$1"
+  if [[ -f "$REPO_DIR/themes/$theme" ]]; then
+    echo "$REPO_DIR/themes/$theme"
+    return
+  fi
+  if [[ -f "$GHOSTTY_BUILTIN/$theme" ]]; then
+    echo "$GHOSTTY_BUILTIN/$theme"
+    return
+  fi
+  return 1
+}
+
+parse_ghostty_theme() {
+  python3 - "$1" << 'PARSE_PY'
+import sys, json, re
+
+theme_path = sys.argv[1]
+colors = {}
+palette = {}
+
+with open(theme_path, "r", encoding="utf-8") as f:
+    for line in f:
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        m = re.match(r"^(\S+)\s*=\s*(.+)$", line)
+        if not m:
+            continue
+        key, val = m.group(1), m.group(2).strip()
+        if key == "palette":
+            pm = re.match(r"(\d+)=(#[0-9a-fA-F]{6})", val)
+            if pm:
+                palette[int(pm.group(1))] = pm.group(2)
+        elif val.startswith("#"):
+            colors[key] = val
+
+ansi_names = [
+    "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White",
+    "BrightBlack", "BrightRed", "BrightGreen", "BrightYellow",
+    "BrightBlue", "BrightMagenta", "BrightCyan", "BrightWhite"
+]
+
+result = {
+    "background": colors.get("background", "#15171a"),
+    "foreground": colors.get("foreground", "#d8d6cf"),
+    "cursor_color": colors.get("cursor-color", colors.get("foreground", "#f0c946")),
+    "cursor_text": colors.get("cursor-text", colors.get("background", "#111316")),
+    "selection_bg": colors.get("selection-background", "#323a46"),
+    "selection_fg": colors.get("selection-foreground", ""),
+}
+
+for i, name in enumerate(ansi_names):
+    result[f"ansi{name}"] = palette.get(i, "#000000")
+
+print(json.dumps(result))
+PARSE_PY
+}
+
+patch_ide_settings() {
+  local settings_path="$1"
+  local colors_json="$2"
+
+  if [[ ! -f "$settings_path" ]]; then
+    mkdir -p "$(dirname "$settings_path")"
+    echo '{}' > "$settings_path"
+  fi
+
+  python3 - "$settings_path" "$colors_json" << 'PATCH_PY'
+import sys, json
+
+settings_path = sys.argv[1]
+colors = json.loads(sys.argv[2])
+
+with open(settings_path, "r", encoding="utf-8") as f:
+    try:
+        settings = json.load(f)
+    except json.JSONDecodeError:
+        settings = {}
+
+customizations = settings.get("workbench.colorCustomizations", {})
+mapping = {
+    "terminal.background": colors["background"],
+    "terminal.foreground": colors["foreground"],
+    "terminalCursor.foreground": colors["cursor_color"],
+    "terminalCursor.background": colors["cursor_text"],
+    "terminal.selectionBackground": colors["selection_bg"],
+    "terminal.ansiBlack": colors["ansiBlack"],
+    "terminal.ansiRed": colors["ansiRed"],
+    "terminal.ansiGreen": colors["ansiGreen"],
+    "terminal.ansiYellow": colors["ansiYellow"],
+    "terminal.ansiBlue": colors["ansiBlue"],
+    "terminal.ansiMagenta": colors["ansiMagenta"],
+    "terminal.ansiCyan": colors["ansiCyan"],
+    "terminal.ansiWhite": colors["ansiWhite"],
+    "terminal.ansiBrightBlack": colors["ansiBrightBlack"],
+    "terminal.ansiBrightRed": colors["ansiBrightRed"],
+    "terminal.ansiBrightGreen": colors["ansiBrightGreen"],
+    "terminal.ansiBrightYellow": colors["ansiBrightYellow"],
+    "terminal.ansiBrightBlue": colors["ansiBrightBlue"],
+    "terminal.ansiBrightMagenta": colors["ansiBrightMagenta"],
+    "terminal.ansiBrightCyan": colors["ansiBrightCyan"],
+    "terminal.ansiBrightWhite": colors["ansiBrightWhite"],
+}
+if colors.get("selection_fg"):
+    mapping["terminal.selectionForeground"] = colors["selection_fg"]
+
+customizations.update(mapping)
+settings["workbench.colorCustomizations"] = customizations
+
+with open(settings_path, "w", encoding="utf-8") as f:
+    json.dump(settings, f, indent=2, ensure_ascii=False)
+    f.write("\n")
+PATCH_PY
+}
+
+patch_zed_settings() {
+  local zed_path="$1"
+  local colors_json="$2"
+  [[ -f "$zed_path" ]] || return 0
+
+  python3 - "$zed_path" "$colors_json" << 'ZED_PY'
+import sys, json
+
+zed_path = sys.argv[1]
+c = json.loads(sys.argv[2])
+with open(zed_path, "r", encoding="utf-8") as f:
+    try:
+        data = json.load(f)
+    except json.JSONDecodeError:
+        sys.exit(0)
+
+overrides = data.get("experimental.theme_overrides", {})
+overrides.update({
+    "terminal.background": c["background"],
+    "terminal.foreground": c["foreground"],
+    "terminal.ansi.black": c["ansiBlack"],
+    "terminal.ansi.red": c["ansiRed"],
+    "terminal.ansi.green": c["ansiGreen"],
+    "terminal.ansi.yellow": c["ansiYellow"],
+    "terminal.ansi.blue": c["ansiBlue"],
+    "terminal.ansi.magenta": c["ansiMagenta"],
+    "terminal.ansi.cyan": c["ansiCyan"],
+    "terminal.ansi.white": c["ansiWhite"],
+    "terminal.ansi.bright_black": c["ansiBrightBlack"],
+    "terminal.ansi.bright_red": c["ansiBrightRed"],
+    "terminal.ansi.bright_green": c["ansiBrightGreen"],
+    "terminal.ansi.bright_yellow": c["ansiBrightYellow"],
+    "terminal.ansi.bright_blue": c["ansiBrightBlue"],
+    "terminal.ansi.bright_magenta": c["ansiBrightMagenta"],
+    "terminal.ansi.bright_cyan": c["ansiBrightCyan"],
+    "terminal.ansi.bright_white": c["ansiBrightWhite"],
+})
+data["experimental.theme_overrides"] = overrides
+with open(zed_path, "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+    f.write("\n")
+ZED_PY
+}
+
+patch_alacritty_toml() {
+  local toml_path="$1"
+  local colors_json="$2"
+  [[ -f "$toml_path" ]] || return 0
+
+  python3 - "$toml_path" "$colors_json" << 'ALA_PY'
+import sys, json, re
+
+path = sys.argv[1]
+c = json.loads(sys.argv[2])
+content = open(path, "r", encoding="utf-8").read()
+content = re.sub(
+    r"\[colors\.primary\][\s\S]*$",
+    (
+        f"[colors.primary]\nbackground = \"{c['background']}\"\nforeground = \"{c['foreground']}\"\n\n"
+        f"[colors.cursor]\ntext = \"{c['cursor_text']}\"\ncursor = \"{c['cursor_color']}\"\n\n"
+        f"[colors.normal]\n"
+        f"black   = \"{c['ansiBlack']}\"\nred     = \"{c['ansiRed']}\"\n"
+        f"green   = \"{c['ansiGreen']}\"\nyellow  = \"{c['ansiYellow']}\"\n"
+        f"blue    = \"{c['ansiBlue']}\"\nmagenta = \"{c['ansiMagenta']}\"\n"
+        f"cyan    = \"{c['ansiCyan']}\"\nwhite   = \"{c['ansiWhite']}\"\n\n"
+        f"[colors.bright]\n"
+        f"black   = \"{c['ansiBrightBlack']}\"\nred     = \"{c['ansiBrightRed']}\"\n"
+        f"green   = \"{c['ansiBrightGreen']}\"\nyellow  = \"{c['ansiBrightYellow']}\"\n"
+        f"blue    = \"{c['ansiBrightBlue']}\"\nmagenta = \"{c['ansiBrightMagenta']}\"\n"
+        f"cyan    = \"{c['ansiBrightCyan']}\"\nwhite   = \"{c['ansiBrightWhite']}\"\n"
+    ),
+    content,
+)
+open(path, "w", encoding="utf-8").write(content)
+ALA_PY
+}
+
+patch_kitty_conf() {
+  local conf_path="$1"
+  local colors_json="$2"
+  [[ -f "$conf_path" ]] || return 0
+
+  python3 - "$conf_path" "$colors_json" << 'KIT_PY'
+import sys, json, re
+
+path = sys.argv[1]
+c = json.loads(sys.argv[2])
+content = open(path, "r", encoding="utf-8").read()
+sel_fg = c.get("selection_fg") or c["foreground"]
+names = [
+    "Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White",
+    "BrightBlack", "BrightRed", "BrightGreen", "BrightYellow",
+    "BrightBlue", "BrightMagenta", "BrightCyan", "BrightWhite"
+]
+palette_lines = "\n".join(f"color{i:<2d} {c['ansi' + n]}" for i, n in enumerate(names))
+block = (
+    f"background {c['background']}\n"
+    f"foreground {c['foreground']}\n"
+    f"cursor {c['cursor_color']}\n"
+    f"cursor_text_color {c['cursor_text']}\n"
+    f"selection_background {c['selection_bg']}\n"
+    f"selection_foreground {sel_fg}\n\n"
+    f"{palette_lines}\n"
+)
+content = re.sub(r"^background\s+#[0-9a-fA-F]{6}[\s\S]*$", block, content, flags=re.MULTILINE)
+open(path, "w", encoding="utf-8").write(content)
+KIT_PY
+}
+
+patch_wezterm_lua() {
+  local lua_path="$1"
+  local colors_json="$2"
+  [[ -f "$lua_path" ]] || return 0
+
+  python3 - "$lua_path" "$colors_json" << 'WEZ_PY'
+import sys, json, re
+
+path = sys.argv[1]
+c = json.loads(sys.argv[2])
+content = open(path, "r", encoding="utf-8").read()
+sel_fg = c.get("selection_fg") or c["foreground"]
+ansi = [c[f"ansi{k}"] for k in ("Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White")]
+brights = [c[f"ansiBright{k}"] for k in ("Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White")]
+ansi_s = "{ " + ", ".join(f"'{x}'" for x in ansi) + " }"
+bright_s = "{ " + ", ".join(f"'{x}'" for x in brights) + " }"
+block = (
+    "config.colors = {\n"
+    f"  foreground = '{c['foreground']}',\n"
+    f"  background = '{c['background']}',\n"
+    f"  cursor_bg = '{c['cursor_color']}',\n"
+    f"  cursor_fg = '{c['cursor_text']}',\n"
+    f"  selection_bg = '{c['selection_bg']}',\n"
+    f"  selection_fg = '{sel_fg}',\n"
+    f"  ansi = {ansi_s},\n"
+    f"  brights = {bright_s},\n"
+    "}"
+)
+content = re.sub(r"config\.colors\s*=\s*\{[\s\S]*?\n\}", block, content)
+open(path, "w", encoding="utf-8").write(content)
+WEZ_PY
+}
+
+patch_warp() {
+  local theme="$1"
+  local slug
+  slug="$(echo "$theme" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/_/g; s/^_+//; s/_+$//')"
+
+  local yaml="$REPO_DIR/adapters/warp/themes/${slug}.yaml"
+  if [[ -f "$yaml" ]]; then
+    mkdir -p "$HOME/.warp/themes"
+    cp -f "$yaml" "$HOME/.warp/themes/"
+    echo "  ✓ Warp: copied ${slug}.yaml → ~/.warp/themes/ (select in Warp Settings → Appearance)"
+  else
+    echo "  ⊘ Warp: no adapter theme for '$theme' (skipped)"
+  fi
+}
+
+patch_tmux() {
+  local colors_json="$1"
+  local tmux_conf="$HOME/.tmux.conf"
+
+  if [[ ! -f "$tmux_conf" ]]; then
+    echo "  ⊘ tmux: no ~/.tmux.conf found (skipped)"
+    return
+  fi
+
+  python3 - "$tmux_conf" "$colors_json" << 'TMUX_PY'
+import sys, json, re
+
+tmux_path = sys.argv[1]
+colors = json.loads(sys.argv[2])
+
+with open(tmux_path, "r", encoding="utf-8") as f:
+    content = f.read()
+
+bg = colors["background"]
+fg = colors["foreground"]
+dim_fg = colors.get("ansiBrightBlack", "#878d96")
+
+def darken(hex_color, amount=0x08):
+    r = max(0, int(hex_color[1:3], 16) - amount)
+    g = max(0, int(hex_color[3:5], 16) - amount)
+    b = max(0, int(hex_color[5:7], 16) - amount)
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+dim_bg = darken(bg)
+border_dim = darken(bg, 0x10)
+border_active = colors.get("ansiYellow", "#f0c946")
+
+content = re.sub(r"(window-style\s+')[^']*(')", rf"\g<1>fg={dim_fg},bg={dim_bg}\g<2>", content)
+content = re.sub(r"(window-active-style\s+')[^']*(')", rf"\g<1>fg={fg},bg={bg}\g<2>", content)
+content = re.sub(r"(pane-border-style\s+')[^']*(')", rf"\g<1>fg={border_dim}\g<2>", content)
+content = re.sub(r"(pane-active-border-style\s+')[^']*(')", rf"\g<1>fg={border_active}\g<2>", content)
+
+with open(tmux_path, "w", encoding="utf-8") as f:
+    f.write(content)
+TMUX_PY
+
+  tmux source-file "$tmux_conf" 2>/dev/null && \
+    echo "  ✓ tmux: updated pane colors (live-reloaded)" || \
+    echo "  ✓ tmux: updated ~/.tmux.conf (reload on next attach)"
+}
+
+patch_superset_json() {
+  local sup_path="$1"
+  local theme="$2"
+  [[ -f "$sup_path" ]] || return 0
+
+  python3 - "$sup_path" "$theme" << 'SUP_PY'
+import json, sys
+
+sup_path, theme = sys.argv[1], sys.argv[2]
+with open(sup_path, "r", encoding="utf-8") as f:
+    try:
+        data = json.load(f)
+    except json.JSONDecodeError:
+        sys.exit(0)
+data.setdefault("terminal", {})["theme"] = theme
+with open(sup_path, "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+    f.write("\n")
+SUP_PY
+}
+
+update_adapter_json() {
+  local colors_json="$1"
+  local theme_name="${2:-}"
+  local adapters=("vscode" "cursor" "antigravity" "ade" "windsurf")
+
+  for adapter in "${adapters[@]}"; do
+    local adapter_settings="$REPO_DIR/adapters/$adapter/settings.json"
+    if [[ -f "$adapter_settings" ]]; then
+      patch_ide_settings "$adapter_settings" "$colors_json"
+    fi
+  done
+  patch_zed_settings "$REPO_DIR/adapters/zed/settings.json" "$colors_json"
+  patch_alacritty_toml "$REPO_DIR/adapters/alacritty/alacritty.toml" "$colors_json"
+  patch_kitty_conf "$REPO_DIR/adapters/kitty/kitty.conf" "$colors_json"
+  patch_wezterm_lua "$REPO_DIR/adapters/wezterm/wezterm.lua" "$colors_json"
+  if [[ -n "$theme_name" ]]; then
+    patch_superset_json "$REPO_DIR/adapters/superset/terminal.json" "$theme_name"
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+THEME_PARTS=()
+for arg in "$@"; do
+  case "$arg" in
+    --all|-a) SYNC_ALL=1 ;;
+    --help|-h) show_help; exit 0 ;;
+    --list|-l) ghostty +list-themes; exit 0 ;;
+    --current|current) print_current_theme; exit 0 ;;
+    --signal|bat-signal) print_bat_signal; exit 0 ;;
+    sync)
+      shift
+      exec "$REPO_DIR/install.sh" "$@"
+      ;;
+    *) THEME_PARTS+=("$arg") ;;
+  esac
+done
+
+if [[ ${#THEME_PARTS[@]} -eq 0 ]]; then
+  show_help
   exit 0
 fi
 
-if [[ "$1" == "--list" || "$1" == "-l" ]]; then
-  ghostty +list-themes
-  exit 0
-fi
-
-if [[ "$1" == "sync" ]]; then
-  shift
-  exec "$REPO_DIR/install.sh" "$@"
-fi
-
-TARGET_THEME="$(resolve_theme "$*")"
+TARGET_THEME="$(resolve_theme "${THEME_PARTS[*]}")"
 
 if [[ ! -f "$CONFIG_FILE" ]]; then
   echo "Error: Ghostty config not found at $CONFIG_FILE" >&2
@@ -111,7 +581,64 @@ with open(cfg_path, "w", encoding="utf-8") as f:
     f.write(new_content)
 PY
 
-# Hot-reload Ghostty immediately via SIGUSR2 (no restart required)
 pkill -USR2 -x ghostty 2>/dev/null || true
+echo "✓ Ghostty: switched to $TARGET_THEME (hot-reloaded)"
 
-echo "Switched to: $TARGET_THEME (hot-reloaded)"
+if [[ "$SYNC_ALL" -eq 1 ]]; then
+  THEME_FILE="$(find_theme_file "$TARGET_THEME" 2>/dev/null || true)"
+  if [[ -z "$THEME_FILE" ]]; then
+    echo "⚠ Could not find theme file for '$TARGET_THEME' — skipping IDE/terminal sync" >&2
+    exit 0
+  fi
+
+  COLORS_JSON="$(parse_ghostty_theme "$THEME_FILE")"
+
+  echo ""
+  echo "Syncing to all terminals..."
+
+  for ide_info in \
+    "Code:VS Code" \
+    "Cursor:Cursor" \
+    "Antigravity:Antigravity" \
+    "Antigravity IDE:Antigravity IDE" \
+    "Windsurf:Windsurf"; do
+    IFS=':' read -r dir_name display_name <<< "$ide_info"
+    local_settings="$APP_SUPPORT/$dir_name/User/settings.json"
+    if [[ -d "$APP_SUPPORT/$dir_name" ]]; then
+      patch_ide_settings "$local_settings" "$COLORS_JSON"
+      echo "  ✓ $display_name: terminal colors updated"
+    fi
+  done
+
+  if [[ -f "$HOME/.config/zed/settings.json" ]]; then
+    patch_zed_settings "$HOME/.config/zed/settings.json" "$COLORS_JSON"
+    echo "  ✓ Zed: terminal colors updated"
+  fi
+  if [[ -f "$HOME/.config/alacritty/alacritty.toml" ]]; then
+    patch_alacritty_toml "$HOME/.config/alacritty/alacritty.toml" "$COLORS_JSON"
+    echo "  ✓ Alacritty: colors updated"
+  fi
+  if [[ -f "$HOME/.config/kitty/kitty.conf" ]]; then
+    patch_kitty_conf "$HOME/.config/kitty/kitty.conf" "$COLORS_JSON"
+    echo "  ✓ Kitty: colors updated"
+  fi
+  if [[ -f "$HOME/.config/wezterm/wezterm.lua" ]]; then
+    patch_wezterm_lua "$HOME/.config/wezterm/wezterm.lua" "$COLORS_JSON"
+    echo "  ✓ WezTerm: colors updated"
+  fi
+
+  if [[ -f "$HOME/.config/superset/terminal.json" ]]; then
+    patch_superset_json "$HOME/.config/superset/terminal.json" "$TARGET_THEME"
+    echo "  ✓ Superset: theme updated"
+  fi
+
+  patch_warp "$TARGET_THEME"
+  patch_tmux "$COLORS_JSON"
+  update_adapter_json "$COLORS_JSON" "$TARGET_THEME"
+
+  echo ""
+  echo "Done — $TARGET_THEME applied everywhere."
+  echo ""
+  echo "NOTE: Warp custom themes must be selected manually:"
+  echo "  Warp → Settings (⌘,) → Appearance → Theme → select '$TARGET_THEME'"
+fi

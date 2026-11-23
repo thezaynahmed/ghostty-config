@@ -1,0 +1,24 @@
+# Gotham Noir - Batcomputer — BATCAVE // SUB-LEVEL-04
+# Built for Brother Eye telemetry, Oracle Clocktower ops, and high-focus terminal control planes.
+palette = 0=#101215
+palette = 1=#ee6b78
+palette = 2=#56cca0
+palette = 3=#f5d042
+palette = 4=#72b4f5
+palette = 5=#bc9bf0
+palette = 6=#5ecad6
+palette = 7=#dce0e5
+palette = 8=#828a96
+palette = 9=#f68e99
+palette = 10=#73dcb5
+palette = 11=#fae06c
+palette = 12=#94c8fa
+palette = 13=#ceb4f5
+palette = 14=#7fdae3
+palette = 15=#eff2f6
+background = #101215
+foreground = #dce0e5
+cursor-color = #f5d042
+cursor-text = #0e1013
+selection-background = #2b3440
+selection-foreground = #eff2f6

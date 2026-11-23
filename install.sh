@@ -41,7 +41,7 @@ Options:
   --windsurf          Merge terminal settings into Windsurf IDE
   --superset          Install Superset ADE terminal config
   --zed               Merge terminal settings into Zed editor
-  --warp              Install all 18 themes to ~/.warp/themes
+  --warp              Install all bundled themes to ~/.warp/themes
   --alacritty         Install ~/.config/alacritty/alacritty.toml
   --wezterm           Install ~/.config/wezterm/wezterm.lua
   --kitty             Install ~/.config/kitty/kitty.conf
@@ -274,7 +274,7 @@ if os.path.exists(p):
         f.write(c)
 PY
   fi
-  echo "✓ Installed 18 themes to ~/.warp/themes and configured Warp settings"
+  echo "✓ Installed bundled themes to ~/.warp/themes and configured Warp settings"
 fi
 
 if [[ "$INSTALL_ALL" -eq 1 || "$INSTALL_CURSOR" -eq 1 ]]; then
