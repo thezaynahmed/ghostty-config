@@ -5,7 +5,7 @@ description: Installs, configures, validates, and troubleshoots the Ghostty Dysl
 
 # Ghostty Config & Universal Theme-Sync Skill
 
-Install, configure, or troubleshoot `thezaynahmed/ghostty-config` on macOS and Linux.
+Install, configure, or troubleshoot `thezaynahmed/ghostty-config` on macOS and Linux (paired with the Gotham Noir theme showcase at https://gothamnoir.zainahmed.net).
 
 ## Quick Setup Workflow
 

@@ -31,7 +31,7 @@ Most terminal configs stop at font and theme, which won't fix color haloing, let
 
 Default dark terminal setups stack three real visual bugs: `#000000`/`#FFFFFF` astigmatism halation, tightly packed glyphs that blur stack traces, and uncalibrated ANSI palettes that hide dark-blue CLI flags or turn `git diff` into flat yellow/gray noise.
 
-This repository clones straight into `~/.config/ghostty` and pairs **GitHub Monaspace Texture Healing**, **linear-corrected P3 alpha blending**, **0.65 inactive split dimming**, and **22 contrast-checked themes** led by our original **Gotham Noir** OKLCH/APCA dark family ([`thezaynahmed/gotham-noir`](https://github.com/thezaynahmed/gotham-noir)).
+This repository clones straight into `~/.config/ghostty` and pairs **GitHub Monaspace Texture Healing**, **linear-corrected P3 alpha blending**, **0.65 inactive split dimming**, and **22 contrast-checked themes** led by our original **Gotham Noir** OKLCH/APCA dark family ([gothamnoir.zainahmed.net](https://gothamnoir.zainahmed.net) | [`thezaynahmed/gotham-noir`](https://github.com/thezaynahmed/gotham-noir)).
 
 ---
 
@@ -137,7 +137,7 @@ ghostty-shell icons never         # disable file and completion icons
 
 ## Themes (22)
 
-**15 built-in Ghostty themes** plus **7 custom calibrated files** in [`themes/`](themes/), led by the 4 OKLCH/APCA **Gotham Noir** variants from [`thezaynahmed/gotham-noir`](https://github.com/thezaynahmed/gotham-noir):
+**15 built-in Ghostty themes** plus **7 custom calibrated files** in [`themes/`](themes/), led by the 4 OKLCH/APCA **Gotham Noir** variants ([gothamnoir.zainahmed.net](https://gothamnoir.zainahmed.net) | [`thezaynahmed/gotham-noir`](https://github.com/thezaynahmed/gotham-noir)):
 
 | # | Theme | Command | Source | Canvas | Ink |
 | :- | :--- | :--- | :--- | :--- | :--- |
