@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# ghostty-theme - Universal terminal theme switcher
+# ghostty-theme (alias: theme-sync) - Universal terminal & IDE theme switcher
 # Syncs Ghostty + VS Code + Cursor + Antigravity + Antigravity IDE + Windsurf
 #       + Zed + Warp + Alacritty + Kitty + WezTerm + tmux
 # ==============================================================================
@@ -61,38 +61,38 @@ resolve_theme() {
 
 show_help() {
   cat << 'EOF'
-Ghostty Theme Switcher - Universal Terminal Theming
+Ghostty Theme Switcher (ghostty-theme / theme-sync) - Universal Terminal & IDE Sync
 
 Usage:
   ghostty-theme <theme>           Switch Ghostty only (live reload)
-  ghostty-theme <theme> --all     Switch ALL terminals: Ghostty + VS Code +
+  theme-sync <theme> --all        Switch ALL terminals & IDEs: Ghostty + VS Code +
                                   Cursor + Antigravity + Antigravity IDE +
                                   Windsurf + Zed + Warp + Alacritty + Kitty +
                                   WezTerm + Superset + tmux
-  ghostty-theme current           Print current active Ghostty theme (read-only)
-  ghostty-theme --signal          Modern Batcomputer Neofetch diagnostic (read-only)
-  ghostty-theme --fetch           Alias for --signal
-  ghostty-theme --list            List all available Ghostty themes
-  ghostty-theme sync --all        Sync repository install across tools
+  theme-sync current              Print current active Ghostty theme (read-only)
+  theme-sync --signal             Modern Batcomputer Neofetch diagnostic (read-only)
+  theme-sync --fetch              Alias for --signal
+  theme-sync --list               List all available Ghostty themes
+  theme-sync sync --all           Sync repository install across tools
 
-Batman Lore Shortcuts (Gotham Noir):
-  ghostty-theme batman            -> Gotham Noir - Year One (aliases: year-one, detective-27, 89)
-  ghostty-theme batcomputer       -> Gotham Noir - Batcomputer (aliases: oracle, batcave, obsidian)
-  ghostty-theme arkham            -> Gotham Noir - Arkham Slate (aliases: detective-mode, narrows, slate)
-  ghostty-theme vengeance         -> Gotham Noir - Vengeance (aliases: red-hood, phantasm, 2022, crimson)
+Gotham Noir Lore Shortcuts:
+  theme-sync batman               -> Gotham Noir - Year One (aliases: year-one, detective-27, 89)
+  theme-sync batcomputer          -> Gotham Noir - Batcomputer (aliases: oracle, batcave, obsidian)
+  theme-sync arkham               -> Gotham Noir - Arkham Slate (aliases: detective-mode, narrows, slate)
+  theme-sync vengeance            -> Gotham Noir - Vengeance (aliases: red-hood, phantasm, 2022, crimson)
 
 Other Shortcuts:
-  ghostty-theme gruvbox           -> Gruvbox Material Dark
-  ghostty-theme gruvbox-medium    -> Gruvbox Material Dark Medium
-  ghostty-theme ef-dream          -> Ef-Dream
-  ghostty-theme kanagawa-wave     -> Kanagawa Wave
-  ghostty-theme catppuccin        -> Catppuccin Mocha
-  ghostty-theme tokyo-night       -> TokyoNight Storm
+  theme-sync gruvbox              -> Gruvbox Material Dark
+  theme-sync gruvbox-medium       -> Gruvbox Material Dark Medium
+  theme-sync ef-dream             -> Ef-Dream
+  theme-sync kanagawa-wave        -> Kanagawa Wave
+  theme-sync catppuccin           -> Catppuccin Mocha
+  theme-sync tokyo-night          -> TokyoNight Storm
 
 Examples:
   ghostty-theme batman --all      # Switch everything to Gotham Noir - Year One
-  ghostty-theme batcomputer --all # Switch everything to Gotham Noir - Batcomputer
-  ghostty-theme --signal          # WayneTech Batcomputer ANSI diagnostic card
+  theme-sync batcomputer --all    # Switch everything to Gotham Noir - Batcomputer
+  theme-sync --signal             # Modern Batcomputer Neofetch ANSI diagnostic card
 EOF
 }
 
