@@ -61,32 +61,33 @@ resolve_theme() {
 
 show_help() {
   cat << 'EOF'
-Ghostty Theme Switcher — Universal Terminal Theming
+Ghostty Theme Switcher - Universal Terminal Theming
 
 Usage:
-  ghostty-theme <theme>           Switch Ghostty only (hot-reload, no restart)
+  ghostty-theme <theme>           Switch Ghostty only (live reload)
   ghostty-theme <theme> --all     Switch ALL terminals: Ghostty + VS Code +
                                   Cursor + Antigravity + Antigravity IDE +
                                   Windsurf + Zed + Warp + Alacritty + Kitty +
-                                  WezTerm + tmux
+                                  WezTerm + Superset + tmux
   ghostty-theme current           Print current active Ghostty theme (read-only)
-  ghostty-theme --signal          Batcomputer Diagnostic + 16 ANSI Swatches (read-only)
+  ghostty-theme --signal          Modern Batcomputer Neofetch diagnostic (read-only)
+  ghostty-theme --fetch           Alias for --signal
   ghostty-theme --list            List all available Ghostty themes
   ghostty-theme sync --all        Sync repository install across tools
 
 Batman Lore Shortcuts (Gotham Noir):
-  ghostty-theme batman            → Gotham Noir - Year One (aliases: year-one, detective-27, 89)
-  ghostty-theme batcomputer       → Gotham Noir - Batcomputer (aliases: oracle, batcave, obsidian)
-  ghostty-theme arkham            → Gotham Noir - Arkham Slate (aliases: detective-mode, narrows, slate)
-  ghostty-theme vengeance         → Gotham Noir - Vengeance (aliases: red-hood, phantasm, 2022, crimson)
+  ghostty-theme batman            -> Gotham Noir - Year One (aliases: year-one, detective-27, 89)
+  ghostty-theme batcomputer       -> Gotham Noir - Batcomputer (aliases: oracle, batcave, obsidian)
+  ghostty-theme arkham            -> Gotham Noir - Arkham Slate (aliases: detective-mode, narrows, slate)
+  ghostty-theme vengeance         -> Gotham Noir - Vengeance (aliases: red-hood, phantasm, 2022, crimson)
 
 Other Shortcuts:
-  ghostty-theme gruvbox           → Gruvbox Material Dark
-  ghostty-theme gruvbox-medium    → Gruvbox Material Dark Medium
-  ghostty-theme ef-dream          → Ef-Dream
-  ghostty-theme kanagawa-wave     → Kanagawa Wave
-  ghostty-theme catppuccin        → Catppuccin Mocha
-  ghostty-theme tokyo-night       → TokyoNight Storm
+  ghostty-theme gruvbox           -> Gruvbox Material Dark
+  ghostty-theme gruvbox-medium    -> Gruvbox Material Dark Medium
+  ghostty-theme ef-dream          -> Ef-Dream
+  ghostty-theme kanagawa-wave     -> Kanagawa Wave
+  ghostty-theme catppuccin        -> Catppuccin Mocha
+  ghostty-theme tokyo-night       -> TokyoNight Storm
 
 Examples:
   ghostty-theme batman --all      # Switch everything to Gotham Noir - Year One
@@ -121,51 +122,7 @@ print_bat_signal() {
   else
     colors_json='{}'
   fi
-  python3 - "$current_theme" "$colors_json" << 'SIG_PY'
-import json, sys
-
-theme = sys.argv[1]
-c = json.loads(sys.argv[2]) if sys.argv[2] else {}
-lore_map = {
-    "Gotham Noir - Year One": ("YEAR-ONE // DETECTIVE-27", "Nomex Kevlar + GCPD Signal Gold — Park Row (1939/1987)"),
-    "Gotham Noir - Batcomputer": ("BATCAVE // SUB-LEVEL-04", "Lucius Fox Applied Sciences + Oracle Clocktower Emerald"),
-    "Gotham Noir - Arkham Slate": ("ARKHAM // DETECTIVE-MODE", "Arkham Island Stonework — 3 AM Zero-Glare Forensic HUD"),
-    "Gotham Noir - Vengeance": ("VENGEANCE // ICEBERG-2022", "Iceberg Lounge Flare + Red Hood Tactical Crimson"),
-}
-proto, lore_desc = lore_map.get(theme, ("WAYNE-TECH // DIAGNOSTIC", "Custom / Built-in Ghostty Terminal Palette"))
-
-def fg_hex(h, text):
-    h = h.lstrip("#")
-    if len(h) != 6:
-        return text
-    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
-    return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
-
-def swatch(h, label):
-    h = h.lstrip("#")
-    if len(h) != 6:
-        return label
-    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
-    return f"\033[48;2;{r};{g};{b}m   \033[0m {label}(#{h})"
-
-gold = c.get("ansiYellow", "#f0c946")
-muted = c.get("ansiBrightBlack", "#878d96")
-print(fg_hex(gold, "=================================================================="))
-print(fg_hex(gold, "  WAYNE ENTERPRISES // BATCOMPUTER DIAGNOSTIC  [DETECTIVE #27]"))
-print(fg_hex(gold, "=================================================================="))
-print(f"  Active Theme : {theme}")
-print(f"  Protocol     : {fg_hex(gold, proto)}")
-print(f"  Archive Note : {fg_hex(muted, lore_desc)}")
-if c:
-    print(f"  Canvas / FG  : {c.get('background')} / {c.get('foreground')}  |  Cursor: {c.get('cursor_color')}")
-    norm = [swatch(c.get(f"ansi{k}", "#000000"), k[:3]) for k in ("Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White")]
-    bright = [swatch(c.get(f"ansiBright{k}", "#000000"), f"B.{k[:3]}") for k in ("Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White")]
-    print("  Normal ANSI  : " + "  ".join(norm[:4]))
-    print("                 " + "  ".join(norm[4:]))
-    print("  Bright ANSI  : " + "  ".join(bright[:4]))
-    print("                 " + "  ".join(bright[4:]))
-print(fg_hex(muted, "  \"Without fear, life has no meaning.\" — Gotham, Year One"))
-SIG_PY
+  python3 "$REPO_DIR/scripts/signal-tui.py" "$CONFIG_FILE" "$current_theme" "$colors_json"
 }
 
 find_theme_file() {
@@ -539,7 +496,7 @@ for arg in "$@"; do
     --help|-h) show_help; exit 0 ;;
     --list|-l) ghostty +list-themes; exit 0 ;;
     --current|current) print_current_theme; exit 0 ;;
-    --signal|bat-signal) print_bat_signal; exit 0 ;;
+    --signal|bat-signal|--fetch) print_bat_signal; exit 0 ;;
     sync)
       shift
       exec "$REPO_DIR/install.sh" "$@"
@@ -582,12 +539,16 @@ with open(cfg_path, "w", encoding="utf-8") as f:
 PY
 
 pkill -USR2 -x ghostty 2>/dev/null || true
-echo "✓ Ghostty: switched to $TARGET_THEME (hot-reloaded)"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  echo "✓ Ghostty: switched to $TARGET_THEME (press Cmd+Shift+, in Ghostty to reload)"
+else
+  echo "✓ Ghostty: switched to $TARGET_THEME (hot-reloaded)"
+fi
 
 if [[ "$SYNC_ALL" -eq 1 ]]; then
   THEME_FILE="$(find_theme_file "$TARGET_THEME" 2>/dev/null || true)"
   if [[ -z "$THEME_FILE" ]]; then
-    echo "⚠ Could not find theme file for '$TARGET_THEME' — skipping IDE/terminal sync" >&2
+    echo "⚠ Could not find theme file for '$TARGET_THEME' - skipping IDE/terminal sync" >&2
     exit 0
   fi
 
@@ -637,7 +598,7 @@ if [[ "$SYNC_ALL" -eq 1 ]]; then
   update_adapter_json "$COLORS_JSON" "$TARGET_THEME"
 
   echo ""
-  echo "Done — $TARGET_THEME applied everywhere."
+  echo "Done: $TARGET_THEME applied everywhere."
   echo ""
   echo "NOTE: Warp custom themes must be selected manually:"
   echo "  Warp → Settings (⌘,) → Appearance → Theme → select '$TARGET_THEME'"
