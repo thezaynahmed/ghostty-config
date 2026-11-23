@@ -27,6 +27,7 @@ LORE_THEMES = (
 
 class ThemeSwitcherTest(unittest.TestCase):
     def test_current_and_signal_are_readonly(self) -> None:
+        ansi_re = re.compile(r"\033\[[0-9;]*m")
         with tempfile.TemporaryDirectory() as td:
             cfg = Path(td) / "config"
             cfg.write_text("theme = Gotham Noir - Year One\nfont-size = 14.5\n", encoding="utf-8")
@@ -34,10 +35,24 @@ class ThemeSwitcherTest(unittest.TestCase):
             cur = subprocess.run([str(GHOSTTY_THEME), "current"], capture_output=True, text=True, env=env, check=True)
             self.assertEqual(cur.stdout.strip(), "Gotham Noir - Year One")
 
-            sig = subprocess.run([str(GHOSTTY_THEME), "--signal"], capture_output=True, text=True, env=env, check=True)
-            self.assertIn("DETECTIVE #27", sig.stdout)
-            self.assertIn("Gotham Noir - Year One", sig.stdout)
-            self.assertIn("YEAR-ONE // DETECTIVE-27", sig.stdout)
+            help_res = subprocess.run([str(GHOSTTY_THEME), "--help"], capture_output=True, text=True, env=env, check=True)
+            self.assertNotIn("—", help_res.stdout)
+
+            for flag in ("--signal", "--fetch"):
+                sig = subprocess.run([str(GHOSTTY_THEME), flag], capture_output=True, text=True, env=env, check=True)
+                self.assertNotIn("—", sig.stdout)
+                self.assertIn("GOTHAM NOIR", sig.stdout)
+                self.assertIn("DETECTIVE #27", sig.stdout)
+                self.assertIn("WCAG", sig.stdout)
+                self.assertIn("Lc ", sig.stdout)
+                self.assertIn("6/6 pods ready", sig.stdout)
+                bordered = [
+                    len(ansi_re.sub("", line))
+                    for line in sig.stdout.splitlines()
+                    if line.startswith(("╭", "│", "├", "╰")) or ansi_re.sub("", line).startswith(("╭", "│", "├", "╰"))
+                ]
+                self.assertGreaterEqual(len(bordered), 10)
+                self.assertEqual(set(bordered), {78}, f"Border alignment mismatch: {bordered}")
             self.assertIn("theme = Gotham Noir - Year One", cfg.read_text(encoding="utf-8"))
 
     def test_batman_lore_aliases(self) -> None:
